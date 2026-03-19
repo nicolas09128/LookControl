@@ -78,6 +78,48 @@ npm run test
 | **Fase 3** | Desarrollo de módulos core (Inventario, Compras, Usuarios) | 🔲 Pendiente |
 | **Fase 4** | Pruebas de calidad y despliegue en producción | 🔲 Pendiente |
 
+# 🎓 Tutorías y Seguimiento
+
+**Tutor:** `Francisco José Mera Calderón`
+
+> [!IMPORTANT]
+> **Nota de Seguimiento:** Las sesiones se desarrollaron bajo un marco de trabajo **ágil**, centradas en la validación de entregables, resolución de bloqueos técnicos y planificación de *sprints* semanales para garantizar el cumplimiento del cronograma.
+
+---
+
+## 📑 Cronograma de Hitos
+
+### 🗓️ Septiembre: Conceptualización e Identidad
+| Fecha | Hito | Descripción |
+| :--- | :--- | :--- |
+| **12-SEP** | 🚀 Lanzamiento | Presentación de asignatura y visión del proyecto. |
+| **19-SEP** | 💎 Branding | Diseño y consolidación de la imagen corporativa. |
+| **26-SEP** | ⚖️ Legal | Formalización del contrato de prestación de servicios. |
+
+### 🏗️ Octubre: Arquitectura y Diseño
+| Fecha | Hito | Descripción |
+| :--- | :--- | :--- |
+| **03-OCT** | 📝 Requisitos | Especificación de historias de usuario y requerimientos. |
+| **10-OCT** | 🎨 UI/UX | Prototipado y diseño de interfaces gráficas. |
+| **17-OCT** | 💾 Data Entry | Diseño del esquema lógico de la base de datos. |
+| **24-OCT** | 🕸️ Modelado | Definición y normalización del modelo relacional. |
+| **31-OCT** | 🤝 Review | Presentación de avances a los stakeholders. |
+
+### 📂 Noviembre: Definición Técnica
+| Fecha | Hito | Descripción |
+| :--- | :--- | :--- |
+| **07-NOV** | 🛠️ Stack | Selección estratégica del ecosistema tecnológico. |
+| **14-NOV** | 📖 Doc Core | Estructuración y organización del repositorio documental. |
+| **21-NOV** | ✍️ Manuales | Definición del índice y puntos clave técnicos. |
+
+### 🚀 Diciembre & Enero: Implementación y Deployment
+| Fecha | Hito | Descripción |
+| :--- | :--- | :--- |
+| **05-DIC** | 📘 Documentación | Redacción final de manuales de usuario y técnicos. |
+| **12-DIC** | ☁️ DevOps | Análisis de alternativas para el despliegue. |
+| **19-DIC** | 💻 Local Host | Pruebas de despliegue en entorno local (Apache Tomcat). |
+| **09-ENE** | ⚡ Producción | Despliegue exitoso en entorno Cloud (Vercel). |
+
 ---
 
 ## 👤 Autoría
