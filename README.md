@@ -15,7 +15,7 @@ LookControl nace para resolver la ineficiencia de la gestión manual en peluquer
 
 | Capa | Tecnología |
 |------|-----------|
-| **Frontend** | React (SPA) + Vite + Bootstrap 5 |
+| **Frontend** | React (SPA) + Vite + Tailwind |
 | **Backend y Auth** | Supabase (PostgreSQL + Auth + Storage) |
 | **Lenguajes** | JavaScript, TypeScript, HTML5, CSS3 |
 | **Otras herramientas** | jsPDF / html2canvas · Cypress (E2E) |
