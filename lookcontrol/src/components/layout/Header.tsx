@@ -15,6 +15,20 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+  const handleResize = () => {
+    // Si la pantalla es más grande que 1024px, cerramos el menú móvil
+    if (window.innerWidth > 650) {
+      setMobileMenuOpen(false);
+    }
+  };
+
+  window.addEventListener('resize', handleResize);
+  
+  // Limpieza al desmontar el componente
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
   useEffect(() => setMobileMenuOpen(false), [location]);
 
   const headerClass = `site-header transition-all duration-300 ${
