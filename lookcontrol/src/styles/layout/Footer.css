@@ -1,0 +1,87 @@
+/* layout/Footer.css */
+
+/* Reset de listas para que no aparezcan puntos extraños */
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mejora la legibilidad de los enlaces */
+footer a {
+  text-decoration: none;
+  color: inherit; /* Evita el azul predeterminado */
+}
+
+/* Asegura que el footer se mantenga al fondo */
+footer {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Suavizado de transiciones para los hovers */
+footer .transition-colors {
+  transition: color 0.2s ease-in-out;
+}
+/* layout/Footer.css */
+
+/* Contenedor principal con un toque de elevación */
+footer {
+  width: 100%;
+  margin-top: auto;
+  position: relative;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.05));
+}
+
+/* Limpieza de listas y espaciado de enlaces */
+footer ul {
+  list-style: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo de los enlaces con micro-interacciones */
+footer .footer-link {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text-secondary);
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 2px 0;
+}
+
+footer .footer-link:hover {
+  color: var(--brand-primary);
+  transform: translateX(4px); /* Desplazamiento sutil al pasar el ratón */
+}
+
+/* Iconos sociales con efecto de brillo */
+footer .social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(var(--brand-primary-rgb), 0.1);
+  color: var(--text-muted);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+footer .social-icon:hover {
+  background: var(--brand-primary);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(var(--brand-primary-rgb), 0.3);
+}
+
+/* Ajuste del logo para que destaque */
+footer .brand-logo {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* Texto de derechos de autor más limpio */
+footer .copyright-text {
+  letter-spacing: 0.025em;
+  opacity: 0.8;
+}

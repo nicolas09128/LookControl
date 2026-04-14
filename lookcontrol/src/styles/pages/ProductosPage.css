@@ -1,0 +1,125 @@
+/* ProductosPage.css */
+
+.productos-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .productos-filters {
+    flex-direction: row;
+  }
+}
+
+.productos-search {
+  position: relative;
+  flex: 1;
+}
+
+.productos-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.productos-search-input {
+  padding-left: 2.25rem;
+}
+
+.productos-filter-select {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .productos-filter-select {
+    width: 12rem;
+  }
+}
+
+.productos-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.productos-table {
+  width: 100%;
+  min-width: 560px;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.productos-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--dark-border);
+  white-space: nowrap;
+}
+
+.productos-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.productos-table tr:hover td {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.productos-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+.productos-action-btn {
+  padding: 0.375rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.productos-action-btn:hover {
+  color: var(--primary-action);
+  background-color: var(--dark-bg);
+}
+
+.productos-action-btn.delete:hover {
+  color: var(--status-danger);
+}
+
+/* Modal producto */
+.productos-modal-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 480px) {
+  .productos-modal-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.productos-modal-form-full {
+  grid-column: 1 / -1;
+}
+
+.productos-modal-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+}

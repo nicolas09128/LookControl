@@ -1,0 +1,71 @@
+/* StockPage.css */
+
+.stock-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-xl);
+}
+
+.stock-filter-select {
+  width: 100%;
+  max-width: 14rem;
+}
+
+@media (min-width: 480px) {
+  .stock-filter-select {
+    width: 12rem;
+  }
+}
+
+.stock-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stock-table {
+  width: 100%;
+  min-width: 480px;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.stock-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--dark-border);
+  white-space: nowrap;
+}
+
+.stock-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.stock-table tr:hover td {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.stock-tipo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.stock-cantidad-positive {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--status-success);
+}
+
+.stock-cantidad-negative {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--status-danger);
+}

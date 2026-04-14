@@ -1,0 +1,99 @@
+/* LoginPage.css */
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.login-logo-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--primary-action);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-logo-icon svg {
+  color: #000;
+}
+
+.login-logo-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.login-card {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.login-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.login-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.login-forgot-link {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-forgot-link a {
+  font-size: 0.75rem;
+  color: var(--primary-action);
+  text-decoration: none;
+}
+
+.login-forgot-link a:hover {
+  text-decoration: underline;
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-lg);
+}
+
+.login-footer-link {
+  color: var(--primary-action);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer-link:hover {
+  text-decoration: underline;
+}

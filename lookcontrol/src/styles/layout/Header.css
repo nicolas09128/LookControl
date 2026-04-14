@@ -1,0 +1,224 @@
+/* layout/Header.css */
+
+:root {
+  --header-height: 64px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 72px;
+  }
+}
+@media (max-width: 767px) {
+  .site-header {
+    background-color: #1E293B !important; 
+    border-bottom: 1px solid #334155;
+  }
+}
+@media (max-width: 700px) {
+  .header-nav, 
+  .header-actions {
+    display: none !important; /* Escondemos los enlaces para que no se rompan */
+  }
+
+  .header-mobile-toggle {
+    display: block !important; /* Mostramos la hamburguesa */
+  }
+}
+@media (max-width: 1024px) {
+  .header-nav, .header-actions { display: none; }
+  .header-mobile-toggle { 
+    display: flex;
+    color: white;
+    background: none;
+    border: none;
+  }
+}
+/* ── Base ─────────────────────────────────────────────────── */
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* ── Inner container height ───────────────────────────────── */
+.header-inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Espacio entre Logo y Enlaces */
+}
+
+.header-right-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: white;
+}
+
+/* ── Fondo transparente (landing sin scroll) ──────────────── */
+.header-transparent {
+  background-color: transparent;
+}
+
+/* ── Fondo sólido: páginas internas + landing con scroll ──── */
+/* Usa #1E293B (--dark-surface) para diferenciarse claramente
+   del fondo de página (#0F172A). Mismo tono que la zona media
+   del gradiente hero de la landing. */
+.header-solid {
+  background-color: #1E293B;
+  border-bottom: 1px solid #334155;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Desktop nav ──────────────────────────────────────────── */
+.header-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+.mobile-nav-link {
+  padding: 0.75rem 1rem;
+  color: #94A3B8;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 8px;
+}
+.mobile-nav-link-primary {
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #38BDF8;
+  color: #0F172A;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 8px;
+}
+.mobile-divider {
+  height: 1px;
+  background: #334155;
+  margin: 0.5rem 0;
+}
+.header-nav-link {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #94A3B8;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #38BDF8, #7DD3FC);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.header-nav-link:hover,
+.header-nav-link.active {
+  color: #F8FAFC;
+}
+
+.header-nav-link.active::after,
+.header-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Desktop action buttons ───────────────────────────────── */
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header-btn-ghost {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  color: #94A3B8;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-btn-ghost:hover {
+  color: #F8FAFC;
+  background-color: rgba(51, 65, 85, 0.5);
+}
+
+.header-btn-primary {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #38BDF8, #7DD3FC);
+  color: #0F172A;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
+  transition: box-shadow 0.2s ease, transform 0.1s ease, filter 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+  filter: brightness(1.05);
+}
+
+.header-btn-primary:active {
+  transform: scale(0.97);
+}
+.header-mobile-toggle { 
+  display: none; 
+}
+.mobile-menu-dropdown {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  background: #1E293B;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  z-index: 999;
+  gap: 0.5rem;
+}
+
+/* ── Animación entrada ────────────────────────────────────── */
+@keyframes headerSlideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}

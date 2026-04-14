@@ -1,0 +1,120 @@
+/* RegisterPage.css */
+
+.register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.register-wrapper {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.register-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.register-logo-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--primary-action);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-logo-icon svg {
+  color: #000;
+}
+
+.register-logo-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.register-card {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.register-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.register-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.register-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-lg);
+}
+
+.register-footer-link {
+  color: var(--primary-action);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Success state */
+.register-success {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+  max-width: 24rem;
+  width: 100%;
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+.register-success-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  background-color: rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-md);
+  font-size: 1.5rem;
+  color: var(--status-success);
+}
+
+.register-success-title {
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--status-success);
+}
+
+.register-success-message {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}

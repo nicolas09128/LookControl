@@ -1,0 +1,97 @@
+/* ProveedoresPage.css */
+
+.proveedores-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .proveedores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .proveedores-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.proveedor-card {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.proveedor-card:hover {
+  border-color: var(--primary-action);
+}
+
+.proveedor-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.proveedor-card-name {
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.proveedor-card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.proveedor-card:hover .proveedor-card-actions {
+  opacity: 1;
+}
+
+.proveedor-card-action {
+  padding: 0.375rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.proveedor-card-action:hover {
+  color: var(--primary-action);
+  background-color: var(--dark-bg);
+}
+
+.proveedor-card-action.delete:hover {
+  color: var(--status-danger);
+}
+
+.proveedor-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.proveedor-card-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.proveedor-card-notes {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--dark-border);
+}

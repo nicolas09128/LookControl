@@ -1,0 +1,17 @@
+/* main.css - Archivo principal de estilos */
+@import './base.css';
+@import './components.css';
+@import './layout/Header.css';
+@import './layout/Footer.css';
+@import './pages/ProfilePage.css';
+@import './pages/ProveedoresPage.css';
+@import './pages/RegisterPage.css';
+@import './pages/ResetPasswordPage.css';
+@import './pages/ServiciosPage.css';
+@import './pages/StockPage.css';
+@import './pages/AdminPage.css';
+@import './pages/ComprasPage.css';
+@import './pages/DashboardPage.css';
+@import './pages/LandingPage.css';
+@import './pages/LoginPage.css';
+@import './pages/ProductosPage.css';
