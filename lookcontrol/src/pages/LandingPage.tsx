@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Package, TrendingUp, ShoppingCart, Scissors, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const FEATURES = [
   { icon: Package,      title: 'Inventario en tiempo real',  desc: 'Control total del stock con alertas automáticas de productos bajo mínimo.' },
@@ -17,8 +18,37 @@ export default function LandingPage() {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="landing-hero">
-        <div className="landing-hero-content">
+<section 
+        className="landing-hero" 
+        style={{ 
+          position: 'relative', 
+          backgroundColor: '#0F172A' // Aplicamos el color base aquí
+        }}
+      >
+        {/* Contenedor de la animación con z-index negativo */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0, // Encima del background pero debajo del contenido
+          opacity: 0.8
+        }}>
+          <DotLottieReact
+            src="https://lottie.host/c634b193-5adb-42ef-b1eb-c7bc466b1066/sq8NAkmeoz.lottie"
+            loop
+            autoplay
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover' 
+            }}
+          />
+        </div>
+
+        {/* El contenido con z-index mayor para estar al frente */}
+        <div className="landing-hero-content" style={{ position: 'relative', zIndex: 1 }}>
           <span className="landing-badge">Gestión integral para peluquerías</span>
           <h1 className="landing-title">
             Deja de gestionar con{' '}

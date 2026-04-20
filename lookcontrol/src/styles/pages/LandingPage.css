@@ -3,17 +3,18 @@
 /* Hero Section */
 .landing-hero {
   position: relative;
+  /* Cambiamos el fondo a transparente para que se vea la animación detrás */
+  background: transparent; 
   min-height: calc(100vh - 80px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
   overflow: hidden;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
 
-/* Resto de los estilos se mantienen igual */
+/* El pseudo-elemento debe ir al fondo de todo */
 .landing-hero::before {
   content: '';
   position: absolute;
@@ -23,6 +24,7 @@
   bottom: 0;
   background: radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.15), transparent 50%);
   pointer-events: none;
+  z-index: -2; /* Más al fondo que la animación */
 }
 
 .landing-hero-content {
