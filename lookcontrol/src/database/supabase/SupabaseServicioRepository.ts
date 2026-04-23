@@ -34,9 +34,10 @@ export class SupabaseServicioRepository implements ServicioRepository {
   }
 
   async create(input: ServicioInput): Promise<{ data?: Servicio; error?: any }> {
+    const { duracion_min, ...dbPayload } = input; // duracion_min no existe en la tabla
     const { data, error } = await supabase
       .from('servicios')
-      .insert(input)
+      .insert(dbPayload)
       .select('*')
       .single();
     if (error) return { error };
@@ -44,9 +45,10 @@ export class SupabaseServicioRepository implements ServicioRepository {
   }
 
   async update(id: number, input: Partial<ServicioInput>): Promise<{ data?: Servicio; error?: any }> {
+    const { duracion_min, id_peluqueria, ...dbPayload } = input; // duracion_min no existe en DB; id_peluqueria no se muta
     const { data, error } = await supabase
       .from('servicios')
-      .update(input)
+      .update(dbPayload)
       .eq('id_servicio', id)
       .select('*')
       .single();

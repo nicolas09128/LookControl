@@ -4,6 +4,14 @@ import type { Perfil, RegisterData } from '../interfaces/Perfil';
 import { supabase } from '../database/supabase/Client';
 import { createUserRepository } from '../database/repositories';
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function generateInviteCode(): string {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+// ─── State interface ──────────────────────────────────────────────────────────
+
 interface AuthState {
   perfil: Perfil | null;
   isAuthenticated: boolean;
@@ -17,7 +25,11 @@ interface AuthState {
   updateNombre: (nombre: string) => Promise<{ error?: string }>;
   sendPasswordRecovery: () => Promise<{ error?: string }>;
   uploadAvatar: (file: File) => Promise<{ error?: string }>;
+  setupOwnerPeluqueria: () => Promise<{ error?: string }>;
+  linkEmployeePeluqueria: (code: string) => Promise<{ error?: string }>;
 }
+
+// ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -59,24 +71,111 @@ export const useAuthStore = create<AuthState>()(
           peluqueria?: { nombre?: string; codigo_invitacion?: string };
         };
 
-        set({
-          perfil: {
-            ...perfilData,
-            nombre_peluqueria: perfilData.peluqueria?.nombre ?? perfilData.nombre_peluqueria,
-            codigo_invitacion: perfilData.peluqueria?.codigo_invitacion ?? perfilData.codigo_invitacion,
-          } as Perfil,
-          isAuthenticated: true,
-          loading: false,
-        });
+        const perfilFinal: Perfil = {
+          ...perfilData,
+          nombre_peluqueria: perfilData.peluqueria?.nombre ?? perfilData.nombre_peluqueria,
+          codigo_invitacion: perfilData.peluqueria?.codigo_invitacion ?? perfilData.codigo_invitacion,
+        };
+
+        set({ perfil: perfilFinal, isAuthenticated: true, loading: false });
+
+        // Auto-setup para dueños sin peluquería enlazada
+        if (perfilFinal.rol === 'admin' && !perfilFinal.id_peluqueria) {
+          await get().setupOwnerPeluqueria();
+        }
       },
 
       register: async (data: RegisterData) => {
         const repo = createUserRepository();
-        // isEmailTaken() NO se llama aquí: RLS bloquea SELECT en perfiles
-        // para usuarios anónimos → siempre devolvía false → 400 en signUp.
-        // Supabase Auth ya gestiona duplicados y devuelve el error apropiado.
         const { error } = await repo.register(data);
         if (error) return { error: error.message ?? 'Error al registrar' };
+        return {};
+      },
+
+      setupOwnerPeluqueria: async () => {
+        const { perfil } = get();
+        if (!perfil) return { error: 'No hay sesión activa' };
+        if (perfil.rol !== 'admin') return { error: 'Solo los dueños pueden usar esta acción' };
+        if (perfil.id_peluqueria) return {}; // Idempotente
+
+        const nombrePeluqueria = perfil.nombre_peluqueria?.trim();
+        if (!nombrePeluqueria) return { error: 'El perfil no tiene nombre de peluquería guardado' };
+
+        // Generar código único (reintento si colisiona)
+        let codigoInvitacion = generateInviteCode();
+        const { data: existing } = await supabase
+          .from('peluquerias')
+          .select('id_peluqueria')
+          .eq('codigo_invitacion', codigoInvitacion)
+          .maybeSingle();
+        if (existing) codigoInvitacion = generateInviteCode();
+
+        const { data: nuevaPeluqueria, error: insertError } = await supabase
+          .from('peluquerias')
+          .insert({ nombre: nombrePeluqueria, codigo_invitacion: codigoInvitacion, activo: true })
+          .select('id_peluqueria, nombre, codigo_invitacion')
+          .single();
+
+        if (insertError || !nuevaPeluqueria) {
+          return { error: insertError?.message ?? 'Error al crear la peluquería' };
+        }
+
+        const { error: updateError } = await supabase
+          .from('perfiles')
+          .update({ id_peluqueria: nuevaPeluqueria.id_peluqueria })
+          .eq('user_id', perfil.user_id);
+
+        if (updateError) return { error: updateError.message };
+
+        set({
+          perfil: {
+            ...perfil,
+            id_peluqueria: nuevaPeluqueria.id_peluqueria,
+            nombre_peluqueria: nuevaPeluqueria.nombre,
+            codigo_invitacion: nuevaPeluqueria.codigo_invitacion,
+          },
+        });
+
+        return {};
+      },
+
+      linkEmployeePeluqueria: async (code: string) => {
+        const { perfil } = get();
+        if (!perfil) return { error: 'No hay sesión activa' };
+
+        const trimmedCode = code.trim().toUpperCase();
+        if (!trimmedCode) return { error: 'Introduce un código válido' };
+
+        const { data: salon, error: salonError } = await supabase
+          .from('peluquerias')
+          .select('id_peluqueria, nombre, codigo_invitacion')
+          .eq('codigo_invitacion', trimmedCode)
+          .eq('activo', true)
+          .single();
+
+        if (salonError || !salon) {
+          return { error: 'Código inválido o peluquería no encontrada' };
+        }
+
+        const { error: updateError } = await supabase
+          .from('perfiles')
+          .update({ id_peluqueria: salon.id_peluqueria, rol: 'empleado' })
+          .eq('user_id', perfil.user_id);
+
+        if (updateError) {
+          return { error: 'No se pudo vincular la cuenta. Inténtalo de nuevo' };
+        }
+
+        set({
+          perfil: {
+            ...perfil,
+            id_peluqueria: salon.id_peluqueria,
+            nombre_peluqueria: salon.nombre,
+            codigo_invitacion: salon.codigo_invitacion,
+            rol: 'empleado',
+          },
+        });
+
         return {};
       },
 

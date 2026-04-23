@@ -5,6 +5,7 @@ export type EstadoCompra = 'pendiente' | 'recibido' | 'cancelado';
 
 export interface Compra {
   id_compra: number;
+  id_peluqueria: number;
   id_proveedor: number | null;
   id_perfil: number;
   numero_factura: string | null;
@@ -30,5 +31,5 @@ export interface DetalleCompra {
   producto?: Pick<Producto, 'nombre' | 'unidad'>;
 }
 
-export type CompraInput = Omit<Compra, 'id_compra' | 'fecha_creacion' | 'proveedor' | 'detalle_compras'>;
+export type CompraInput = Omit<Compra, 'id_compra' | 'fecha_creacion' | 'proveedor' | 'detalle_compras' | 'estado'>;
 export type DetalleCompraInput = Omit<DetalleCompra, 'id_detalle' | 'id_compra' | 'producto'>;

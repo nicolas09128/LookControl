@@ -45,6 +45,19 @@ export class SupabaseProveedorRepository implements ProveedorRepository {
       .from('proveedores').update({ activo: false }).eq('id_proveedor', id);
     return { error: error ?? null };
   }
+
+  async hardDelete(id: number): Promise<{ error?: any }> {
+    // Primero desvincula los productos que referencian este proveedor (FK nullable)
+    await supabase.from('productos').update({ id_proveedor: null }).eq('id_proveedor', id);
+    const { error } = await supabase.from('proveedores').delete().eq('id_proveedor', id);
+    return { error: error ?? null };
+  }
+
+  async reactivate(id: number): Promise<{ error?: any }> {
+    const { error } = await supabase
+      .from('proveedores').update({ activo: true }).eq('id_proveedor', id);
+    return { error: error ?? null };
+  }
 }
 
 // ─── CATEGORÍA ────────────────────────────────────────────
@@ -91,7 +104,11 @@ export class SupabaseCompraRepository implements CompraRepository {
   async getAll(): Promise<{ data?: Compra[]; error?: any }> {
     const { data, error } = await supabase
       .from('compras')
-      .select(`*, proveedor:proveedores(nombre), detalle_compras(*, producto:productos(nombre, unidad))`)
+      .select(`
+        *,
+        proveedor:proveedores(nombre),
+        detalle_compras(*, producto:productos(nombre, unidad))
+      `)
       .order('fecha_compra', { ascending: false });
     if (error) return { error };
     return { data: data as Compra[] };
@@ -100,8 +117,13 @@ export class SupabaseCompraRepository implements CompraRepository {
   async getById(id: number): Promise<{ data?: Compra; error?: any }> {
     const { data, error } = await supabase
       .from('compras')
-      .select(`*, proveedor:proveedores(nombre), detalle_compras(*, producto:productos(nombre, unidad))`)
-      .eq('id_compra', id).single();
+      .select(`
+        *,
+        proveedor:proveedores(nombre),
+        detalle_compras(*, producto:productos(nombre, unidad))
+      `)
+      .eq('id_compra', id)
+      .single();
     if (error) return { error };
     return { data: data as Compra };
   }
@@ -110,9 +132,19 @@ export class SupabaseCompraRepository implements CompraRepository {
     cabecera: CompraInput,
     detalles: DetalleCompraInput[]
   ): Promise<{ data?: Compra; error?: any }> {
+    const dbPayload = {
+      id_peluqueria:  cabecera.id_peluqueria,
+      id_perfil:      cabecera.id_perfil,
+      id_proveedor:   cabecera.id_proveedor,
+      numero_factura: cabecera.numero_factura,
+      notas:          cabecera.notas,
+      total:          cabecera.total,
+      fecha_compra:   cabecera.fecha_compra,
+    };
+
     // 1. Insertar cabecera
     const { data: compra, error: errCabecera } = await supabase
-      .from('compras').insert(cabecera).select('*').single();
+      .from('compras').insert(dbPayload).select('*').single();
     if (errCabecera || !compra) return { error: errCabecera };
 
     // 2. Insertar detalles

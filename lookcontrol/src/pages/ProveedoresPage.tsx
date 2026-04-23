@@ -41,8 +41,23 @@ export default function ProveedoresPage() {
   };
 
   const handleDelete = async (p: Proveedor) => {
-    if (!confirm(`¿Desactivar a "${p.nombre}"?`)) return;
-    await repo.delete(p.id_proveedor); load();
+    if (p.activo) {
+      if (!confirm(`¿Desactivar a "${p.nombre}"?`)) return;
+      await repo.delete(p.id_proveedor);
+    } else {
+      if (!confirm(`¿Eliminar definitivamente a "${p.nombre}"? Esta acción no se puede deshacer.`)) return;
+      const result = await repo.hardDelete(p.id_proveedor);
+      if (result.error) {
+        setAlertMsg({ type: 'error', msg: result.error.message ?? 'No se pudo eliminar el proveedor.' });
+        return;
+      }
+    }
+    load();
+  };
+
+  const handleReactivate = async (p: Proveedor) => {
+    await repo.reactivate(p.id_proveedor);
+    load();
   };
 
   const setF = (k: keyof ProveedorInput) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -68,8 +83,24 @@ export default function ProveedoresPage() {
                   </div>
                   {isAdmin && (
                     <div className="proveedor-card-actions">
-                      <button className="proveedor-card-action"        onClick={() => openEdit(p)}><Pencil size={14} /></button>
-                      <button className="proveedor-card-action delete" onClick={() => handleDelete(p)}><Trash2 size={14} /></button>
+                      <button className="proveedor-card-action" onClick={() => openEdit(p)}><Pencil size={14} /></button>
+                      {!p.activo && (
+                        <button
+                          className="proveedor-card-action"
+                          title="Reactivar proveedor"
+                          onClick={() => handleReactivate(p)}
+                          style={{ color: 'var(--brand-success, #22c55e)' }}
+                        >
+                          ↩
+                        </button>
+                      )}
+                      <button
+                        className="proveedor-card-action delete"
+                        title={p.activo ? 'Desactivar' : 'Eliminar definitivamente'}
+                        onClick={() => handleDelete(p)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   )}
                 </div>

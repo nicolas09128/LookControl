@@ -21,7 +21,7 @@ export default function ComprasPage() {
   const [showModal, setShowModal]     = useState(false);
   const [saving, setSaving]           = useState(false);
   const [alertMsg, setAlertMsg]       = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
-  const [cabecera, setCabecera]       = useState({ id_proveedor: '', numero_factura: '', fecha_compra: new Date().toISOString().split('T')[0], notas: '', estado: 'recibido' as EstadoCompra });
+  const [cabecera, setCabecera] = useState({ id_proveedor: '', numero_factura: '', fecha_compra: new Date().toISOString().split('T')[0], notas: '' });
   const [lineas, setLineas]           = useState<LineaForm[]>([{ ...LINEA_BLANK }]);
 
   const cRepo = useMemo(() => createCompraRepository(), []);
@@ -47,17 +47,17 @@ export default function ComprasPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!perfil) return;
+    if (!perfil || !perfil.id_peluqueria) return;
     if (lineas.some(l => !l.id_producto || l.cantidad <= 0)) { setAlertMsg({ type: 'error', msg: 'Todas las líneas deben tener producto y cantidad válidos.' }); return; }
     setSaving(true);
     const cab: CompraInput = {
-      id_proveedor:    cabecera.id_proveedor ? +cabecera.id_proveedor : null,
-      id_perfil:       perfil.id_perfil,
-      numero_factura:  cabecera.numero_factura || null,
-      fecha_compra:    cabecera.fecha_compra,
-      total:           total,
-      notas:           cabecera.notas || null,
-      estado:          cabecera.estado,
+      id_peluqueria:  perfil.id_peluqueria,
+      id_proveedor:   cabecera.id_proveedor ? +cabecera.id_proveedor : null,
+      id_perfil:      perfil.id_perfil,
+      numero_factura: cabecera.numero_factura || null,
+      fecha_compra:   cabecera.fecha_compra,
+      total:          total,
+      notas:          cabecera.notas || null,
     };
     const det: DetalleCompraInput[] = lineas.map(l => ({
       id_producto:     l.id_producto,
@@ -83,7 +83,7 @@ export default function ComprasPage() {
       <PageHeader
         title="Compras"
         subtitle="Registro de pedidos y facturas"
-        action={isAdmin && <Btn onClick={() => { setAlertMsg(null); setLineas([{ ...LINEA_BLANK }]); setShowModal(true); }}><Plus size={16} />Nueva compra</Btn>}
+        action={isAdmin && <Btn onClick={() => { setAlertMsg(null); setCabecera({ id_proveedor: '', numero_factura: '', fecha_compra: new Date().toISOString().split('T')[0], notas: '' }); setLineas([{ ...LINEA_BLANK }]); setShowModal(true); }}><Plus size={16} />Nueva compra</Btn>}
       />
 
       {loading ? <div><Spinner size={32} /></div>
@@ -151,13 +151,6 @@ export default function ComprasPage() {
               </Field>
               <Field label="Nº Factura">
                 <Input value={cabecera.numero_factura} onChange={e => setCabecera(c => ({ ...c, numero_factura: e.target.value }))} placeholder="FAC-001" />
-              </Field>
-              <Field label="Estado">
-                <Select value={cabecera.estado} onChange={e => setCabecera(c => ({ ...c, estado: e.target.value as EstadoCompra }))}>
-                  <option value="recibido">Recibido</option>
-                  <option value="pendiente">Pendiente</option>
-                  <option value="cancelado">Cancelado</option>
-                </Select>
               </Field>
             </div>
             <Field label="Notas"><Textarea value={cabecera.notas} onChange={e => setCabecera(c => ({ ...c, notas: e.target.value }))} rows={2} /></Field>

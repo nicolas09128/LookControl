@@ -31,21 +31,27 @@ export default function StockPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!perfil || !form.id_producto) { setAlertMsg({ type: 'error', msg: 'Selecciona un producto.' }); return; }
+    if (!perfil || !perfil.id_peluqueria || !form.id_producto) { setAlertMsg({ type: 'error', msg: 'Selecciona un producto.' }); return; }
     if (form.cantidad <= 0)           { setAlertMsg({ type: 'error', msg: 'La cantidad debe ser mayor que 0.' }); return; }
+
+    const prod = productos.find(p => p.id_producto === +form.id_producto);
+    if (form.tipo === 'salida' && prod && prod.stock_actual < form.cantidad) {
+      setAlertMsg({ type: 'error', msg: `Stock insuficiente. Disponible: ${prod.stock_actual} ${prod.unidad}.` });
+      return;
+    }
+
     setSaving(true);
     const qty = form.tipo === 'salida' ? -Math.abs(form.cantidad) : Math.abs(form.cantidad);
     const input: MovimientoInput = {
+      id_peluqueria: perfil.id_peluqueria,
       id_producto:   +form.id_producto,
       id_perfil:     perfil.id_perfil,
       tipo:          form.tipo,
       cantidad:      qty,
       motivo:        form.motivo || null,
-      referencia_id: null,
     };
     const result = await sRepo.registrarMovimiento(input);
     if (!result.error) {
-      const prod = productos.find(p => p.id_producto === +form.id_producto);
       if (prod) {
         const pRepo2 = createProductoRepository();
         await pRepo2.updateStock(prod.id_producto, prod.stock_actual + qty);

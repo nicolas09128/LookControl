@@ -6,6 +6,7 @@ export type TipoMovimiento = 'entrada' | 'salida' | 'ajuste';
 
 export interface MovimientoStock {
   id_movimiento: number;
+  id_peluqueria: number;
   id_producto: number;
   id_perfil: number;
   tipo: TipoMovimiento;
@@ -18,16 +19,16 @@ export interface MovimientoStock {
   perfil?: Pick<Perfil, 'nombre_completo' | 'email'>;
 }
 
-export type MovimientoInput = Omit<MovimientoStock, 'id_movimiento' | 'fecha' | 'producto' | 'perfil'>;
+export type MovimientoInput = Omit<MovimientoStock, 'id_movimiento' | 'fecha' | 'producto' | 'perfil' | 'referencia_id'>;
 
 // ─── SERVICIO ─────────────────────────────────────────────
 export interface Servicio {
-  id_servicio: number;
-  nombre: string;
-  descripcion: string | null;
-  precio: number | null;
-  duracion_min: number | null;
-  activo: boolean;
+  id_servicio:   number;
+  id_peluqueria: number;
+  nombre:        string;
+  precio:        number | null;
+  duracion_min:  number | null;
+  activo:        boolean;
 }
 
 export type ServicioInput = Omit<Servicio, 'id_servicio'>;

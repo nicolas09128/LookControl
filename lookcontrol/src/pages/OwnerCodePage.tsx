@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Scissors } from 'lucide-react';
-import { supabase } from '../database/supabase/Client';
 import { useAuthStore } from '../store/authStore';
 import { Alert, Btn, Field, Input } from '../components/ui/index';
 
+/**
+ * Ruta de fallback /owner-code para empleados que lleguen directamente a la URL.
+ * El flujo principal pasa por el modal en AppLayout.
+ * Esta página mantiene la misma lógica pero llama a linkEmployeePeluqueria del store.
+ */
 export default function OwnerCodePage() {
   const navigate = useNavigate();
-  const perfil = useAuthStore(state => state.perfil);
+  const { perfil, linkEmployeePeluqueria } = useAuthStore();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,6 +19,7 @@ export default function OwnerCodePage() {
 
   useEffect(() => {
     if (!perfil) return;
+    // Si ya tiene peluquería o no es empleado → dashboard
     if (perfil.rol !== 'empleado' || perfil.id_peluqueria) {
       navigate('/dashboard');
     }
@@ -26,33 +31,15 @@ export default function OwnerCodePage() {
 
     setError('');
     setLoading(true);
+    const result = await linkEmployeePeluqueria(code);
+    setLoading(false);
 
-    const { data: salon, error: salonError } = await supabase
-      .from('peluquerias')
-      .select('id_peluqueria')
-      .eq('codigo_invitacion', code.trim())
-      .eq('activo', true)
-      .single();
-
-    if (salonError || !salon) {
-      setError('Código inválido o peluquería no encontrada.');
-      setLoading(false);
-      return;
-    }
-
-    const { error: perfilError } = await supabase
-      .from('perfiles')
-      .update({ id_peluqueria: salon.id_peluqueria, rol: 'empleado' })
-      .eq('user_id', perfil?.user_id);
-
-    if (perfilError) {
-      setError('No se pudo vincular la cuenta. Intenta nuevamente.');
-      setLoading(false);
+    if (result.error) {
+      setError(result.error);
       return;
     }
 
     setSuccess(true);
-    setLoading(false);
     setTimeout(() => navigate('/dashboard'), 1500);
   };
 
@@ -70,7 +57,13 @@ export default function OwnerCodePage() {
           {success && <div><Alert type="success" message="Código aceptado. Redirigiendo..." /></div>}
           <form className="register-form" onSubmit={handleSubmit}>
             <Field label="Código del dueño">
-              <Input placeholder="ABC12345" value={code} onChange={e => setCode(e.target.value)} required autoFocus />
+              <Input
+                placeholder="AB3X9K2M"
+                value={code}
+                onChange={e => setCode(e.target.value.toUpperCase())}
+                required
+                autoFocus
+              />
             </Field>
             <Btn type="submit" loading={loading}>Vincular cuenta</Btn>
           </form>
