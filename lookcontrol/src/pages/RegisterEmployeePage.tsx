@@ -4,6 +4,8 @@ import { Scissors } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { Alert, Btn, Field, Input } from '../components/ui/index';
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function RegisterEmployeePage() {
   const navigate = useNavigate();
   const { register } = useAuthStore();
@@ -15,10 +17,20 @@ export default function RegisterEmployeePage() {
   const set = (key: string) => (e: ChangeEvent<HTMLInputElement>) =>
     setForm(prev => ({ ...prev, [key]: e.target.value }));
 
+  const validate = (): string => {
+    if (!form.nombre.trim())            return 'El nombre completo es obligatorio.';
+    if (!form.email.trim())             return 'El email es obligatorio.';
+    if (!EMAIL_RE.test(form.email))     return 'Introduce un email válido.';
+    if (!form.password)                 return 'La contraseña es obligatoria.';
+    if (form.password.length < 6)       return 'La contraseña debe tener al menos 6 caracteres.';
+    if (form.password !== form.confirm) return 'Las contraseñas no coinciden.';
+    return '';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.password !== form.confirm) { setError('Las contraseñas no coinciden.'); return; }
-    if (form.password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres.'); return; }
+    const msg = validate();
+    if (msg) { setError(msg); return; }
 
     setError('');
     setLoading(true);
@@ -30,10 +42,7 @@ export default function RegisterEmployeePage() {
     });
     setLoading(false);
 
-    if (result.error) {
-      setError(result.error);
-      return;
-    }
+    if (result.error) { setError(result.error); return; }
 
     setSuccess(true);
     setTimeout(() => navigate('/login'), 3000);
@@ -59,19 +68,19 @@ export default function RegisterEmployeePage() {
         <div className="register-card">
           <h1 className="register-title">Registro de empleado</h1>
           <p className="register-subtitle">Regístrate y luego vincula tu cuenta con el código del dueño.</p>
-          {error && <div><Alert type="error" message={error} /></div>}
-          <form className="register-form" onSubmit={handleSubmit}>
+          {error && <div style={{ marginBottom: '1rem' }}><Alert type="error" message={error} /></div>}
+          <form className="register-form" onSubmit={handleSubmit} noValidate>
             <Field label="Nombre completo">
-              <Input placeholder="Carlos Pérez" value={form.nombre} onChange={set('nombre')} required />
+              <Input type="text" placeholder="Carlos Pérez" value={form.nombre} onChange={set('nombre')} autoFocus />
             </Field>
             <Field label="Email">
-              <Input type="email" placeholder="tu@email.com" value={form.email} onChange={set('email')} required />
+              <Input type="text" placeholder="tu@email.com" value={form.email} onChange={set('email')} />
             </Field>
             <Field label="Contraseña">
-              <Input type="password" placeholder="Mín. 6 caracteres" value={form.password} onChange={set('password')} required />
+              <Input type="password" placeholder="Mín. 6 caracteres" value={form.password} onChange={set('password')} />
             </Field>
             <Field label="Confirmar contraseña">
-              <Input type="password" placeholder="Repite la contraseña" value={form.confirm} onChange={set('confirm')} required />
+              <Input type="password" placeholder="Repite la contraseña" value={form.confirm} onChange={set('confirm')} />
             </Field>
             <Btn type="submit" loading={loading}>Crear cuenta de empleado</Btn>
           </form>

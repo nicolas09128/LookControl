@@ -5,6 +5,8 @@ import { supabase } from '../database/supabase/Client';
 import { useAuthStore } from '../store/authStore';
 import { Alert, Btn, Field, Input } from '../components/ui/index';
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { initSession } = useAuthStore();
@@ -13,8 +15,18 @@ export default function LoginPage() {
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
 
+  const validate = (): string => {
+    if (!email.trim())          return 'El email es obligatorio.';
+    if (!EMAIL_RE.test(email))  return 'Introduce un email válido.';
+    if (!password)              return 'La contraseña es obligatoria.';
+    return '';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const msg = validate();
+    if (msg) { setError(msg); return; }
+
     setError('');
     setLoading(true);
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
@@ -43,13 +55,13 @@ export default function LoginPage() {
         <div className="login-card">
           <h1 className="login-title">Bienvenido de vuelta</h1>
           <p className="login-subtitle">Inicia sesión para continuar</p>
-          {error && <div><Alert type="error" message={error} /></div>}
-          <form className="login-form" onSubmit={handleSubmit}>
+          {error && <div style={{ marginBottom: '1rem' }}><Alert type="error" message={error} /></div>}
+          <form className="login-form" onSubmit={handleSubmit} noValidate>
             <Field label="Email">
-              <Input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} required autoFocus />
+              <Input type="text" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} autoFocus />
             </Field>
             <Field label="Contraseña">
-              <Input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+              <Input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
             </Field>
             <div className="login-forgot-link">
               <Link to="/reset-password">¿Olvidaste tu contraseña?</Link>

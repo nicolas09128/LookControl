@@ -7,7 +7,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 
 const NAV_ITEMS = [
-  { to: '/dashboard',   label: 'Dashboard',   icon: LayoutDashboard, roles: ['admin', 'user', 'empleado'] },
+  { to: '/dashboard',   label: 'Panel de Control', icon: LayoutDashboard, roles: ['admin', 'user', 'empleado'] },
   { to: '/productos',   label: 'Productos',    icon: Package,         roles: ['admin', 'user', 'empleado'] },
   { to: '/stock',       label: 'Stock',        icon: TrendingUp,      roles: ['admin', 'user', 'empleado'] },
   { to: '/compras',     label: 'Compras',      icon: ShoppingCart,    roles: ['admin', 'user', 'empleado'] },
@@ -234,14 +234,14 @@ export default function AppLayout() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-6 flex flex-col gap-1 overflow-y-auto">
         {visibleItems.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? 'nav-active'
                   : 'text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-elevated)'
@@ -255,12 +255,12 @@ export default function AppLayout() {
       </nav>
 
       {/* User footer */}
-      <div className="px-3 py-4 border-t border-(--border-base) space-y-1">
+      <div className="px-3 py-4 border-t border-(--border-base) flex flex-col gap-2">
         <NavLink
           to="/profile"
           onClick={() => setSidebarOpen(false)}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
               isActive
                 ? 'nav-active'
                 : 'text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-elevated)'
@@ -281,10 +281,10 @@ export default function AppLayout() {
         </NavLink>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-(--text-secondary) hover:text-(--brand-danger) hover:bg-(--bg-elevated) transition-colors"
+          className="sidebar-logout-btn"
         >
-          <LogOut size={18} />
-          Cerrar sesión
+          <LogOut size={16} />
+          <span>Cerrar sesión</span>
         </button>
       </div>
     </div>

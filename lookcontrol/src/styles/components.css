@@ -495,3 +495,103 @@
 /* Hover effects */
 .hover\:opacity-100:hover { opacity: 1; }
 .hover\:scale-110:hover { transform: scale(1.1); }
+/* ── Sidebar logout button ─────────────────────────────────────────────────── */
+.sidebar-logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--status-danger) 30%, transparent);
+  background: color-mix(in srgb, var(--status-danger) 8%, transparent);
+  color: var(--status-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  letter-spacing: 0.01em;
+}
+
+.sidebar-logout-btn:hover {
+  background: color-mix(in srgb, var(--status-danger) 18%, transparent);
+  border-color: color-mix(in srgb, var(--status-danger) 55%, transparent);
+}
+
+/* ── Form primitives (Field / Input / Select / Textarea) ───────────────────── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input.input-error {
+  border-color: var(--status-danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-danger) 15%, transparent);
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 150ms ease;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+}
