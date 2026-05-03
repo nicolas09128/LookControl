@@ -74,6 +74,25 @@
   color: var(--text-muted);
 }
 
+.compra-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.compra-delete-btn:hover {
+  color: var(--status-danger);
+  background-color: var(--dark-bg);
+}
+
 .compra-details {
   padding: var(--spacing-md);
   border-top: 1px solid var(--dark-border);

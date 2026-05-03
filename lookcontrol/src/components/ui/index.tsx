@@ -43,6 +43,43 @@ export function Alert({ type, message }: { type: 'error' | 'success'; message: s
   return <div className={`modal-alert ${type}`}>{message}</div>;
 }
 
+export function ConfirmDialog({
+  title,
+  message,
+  confirmText = 'Aceptar',
+  cancelText = 'Cancelar',
+  danger = false,
+  onConfirm,
+  onCancel,
+}: {
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  danger?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="modal-overlay">
+      <div className="modal-backdrop" onClick={onCancel} />
+      <div className="modal-panel sm">
+        <div className="modal-header">
+          <h2 className="modal-title">{title}</h2>
+          <button onClick={onCancel} className="modal-close"><X size={16} /></button>
+        </div>
+        <div className="modal-body">
+          <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{message}</p>
+          <div className="productos-modal-actions" style={{ paddingTop: '1.25rem' }}>
+            <Btn type="button" variant="ghost" onClick={onCancel}>{cancelText}</Btn>
+            <Btn type="button" variant={danger ? 'danger' : 'primary'} onClick={onConfirm}>{confirmText}</Btn>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── SPINNER ─────────────────────────────────────────────
 export function Spinner({ size = 20 }: { size?: number }) {
   return (

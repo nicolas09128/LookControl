@@ -128,7 +128,7 @@ export default function StockPage() {
           {alertMsg && <div><Alert type={alertMsg.type} message={alertMsg.msg} /></div>}
           <form onSubmit={handleSave}>
             <Field label="Producto *">
-              <Select value={form.id_producto} onChange={e => setForm(f => ({ ...f, id_producto: e.target.value }))} required>
+              <Select value={form.id_producto} onChange={e => setForm(f => ({ ...f, id_producto: e.target.value }))}>
                 <option value="">Seleccionar producto...</option>
                 {productos.map(p => <option key={p.id_producto} value={p.id_producto}>{p.nombre} (stock: {p.stock_actual} {p.unidad})</option>)}
               </Select>
@@ -141,7 +141,7 @@ export default function StockPage() {
               </Select>
             </Field>
             <Field label="Cantidad">
-              <Input type="number" min="1" value={form.cantidad} onChange={e => setForm(f => ({ ...f, cantidad: +e.target.value }))} required />
+              <Input type="number" min="1" value={form.cantidad} onChange={e => setForm(f => ({ ...f, cantidad: +e.target.value }))} />
             </Field>
             <Field label="Motivo">
               <Textarea value={form.motivo} onChange={e => setForm(f => ({ ...f, motivo: e.target.value }))} rows={2} placeholder="Descripción del movimiento..." />

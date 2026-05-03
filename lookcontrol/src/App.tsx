@@ -11,7 +11,8 @@ import RegisterOwnerPage from './pages/RegisterOwnerPage';
 import RegisterEmployeePage from './pages/RegisterEmployeePage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import NosotrosPage      from './pages/NosotrosPage';
-import PreciosPage       from './pages/PreciosPage';
+import ContactoPage      from './pages/ContactoPage';
+import FAQPage           from './pages/FAQPage';
 
 const DashboardPage   = lazy(() => import('./pages/DashboardPage'));
 const ProductosPage   = lazy(() => import('./pages/ProductosPage'));
@@ -36,6 +37,11 @@ function PrivateLayout() {
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const { perfil } = useAuthStore();
   return perfil?.rol === 'admin' ? <>{children}</> : <Navigate to="/dashboard" replace />;
+}
+
+function RoleGuard({ children, roles }: { children: React.ReactNode; roles: string[] }) {
+  const { perfil } = useAuthStore();
+  return perfil?.rol && roles.includes(perfil.rol) ? <>{children}</> : <Navigate to="/dashboard" replace />;
 }
 
 const PageLoader = () => (
@@ -65,7 +71,8 @@ export default function App() {
             <Route path="/register/employee" element={<PublicRoute><RegisterEmployeePage /></PublicRoute>} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/nosotros"       element={<NosotrosPage />} />
-            <Route path="/precios"        element={<PreciosPage />} />
+            <Route path="/contacto"       element={<ContactoPage />} />
+            <Route path="/faq"            element={<FAQPage />} />
           </Route>
 
           {/* Rutas privadas: sidebar AppLayout */}
@@ -73,7 +80,7 @@ export default function App() {
             <Route path="/dashboard"   element={<DashboardPage />} />
             <Route path="/productos"   element={<ProductosPage />} />
             <Route path="/compras"     element={<ComprasPage />} />
-            <Route path="/proveedores" element={<ProveedoresPage />} />
+            <Route path="/proveedores" element={<RoleGuard roles={['admin', 'user']}><ProveedoresPage /></RoleGuard>} />
             <Route path="/stock"       element={<StockPage />} />
             <Route path="/servicios"   element={<ServiciosPage />} />
             <Route path="/profile"     element={<ProfilePage />} />

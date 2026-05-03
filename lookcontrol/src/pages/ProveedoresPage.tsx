@@ -3,9 +3,11 @@ import { Plus, Pencil, Trash2, Phone, Mail } from 'lucide-react';
 import { createProveedorRepository } from '../database/repositories';
 import type { Proveedor, ProveedorInput } from '../interfaces/Proveedor';
 import { useAuthStore } from '../store/authStore';
-import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Textarea } from '../components/ui/index';
+import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Textarea, ConfirmDialog } from '../components/ui/index';
 
 const BLANK: ProveedorInput = { id_peluqueria: 0, nombre: '', telefono: null, email: null, direccion: null, notas: null, activo: true };
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[0-9\s()-]{7,20}$/;
 
 export default function ProveedoresPage() {
   const { perfil } = useAuthStore();
@@ -18,6 +20,7 @@ export default function ProveedoresPage() {
   const [form, setForm]               = useState<ProveedorInput>(BLANK);
   const [saving, setSaving]           = useState(false);
   const [alertMsg, setAlertMsg]       = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
+  const [pendingAction, setPendingAction] = useState<{ proveedor: Proveedor; action: 'deactivate' | 'delete' } | null>(null);
 
   const repo = useMemo(() => createProveedorRepository(), []);
   const load = async () => { setLoading(true); const r = await repo.getAll(); setProveedores(r.data ?? []); setLoading(false); };
@@ -32,20 +35,27 @@ export default function ProveedoresPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    const email = form.email?.trim() ?? '';
+    const telefono = form.telefono?.trim() ?? '';
     if (!form.nombre.trim()) { setAlertMsg({ type: 'error', msg: 'El nombre es obligatorio.' }); return; }
+    if (email && !EMAIL_RE.test(email)) { setAlertMsg({ type: 'error', msg: 'Introduce un email valido.' }); return; }
+    if (telefono && !PHONE_RE.test(telefono)) { setAlertMsg({ type: 'error', msg: 'Introduce un telefono valido.' }); return; }
     setSaving(true);
-    const result = editing ? await repo.update(editing.id_proveedor, form) : await repo.create(form);
+    const payload = { ...form, email: email || null, telefono: telefono || null };
+    const result = editing ? await repo.update(editing.id_proveedor, payload) : await repo.create(payload);
     setSaving(false);
     if (result.error) { setAlertMsg({ type: 'error', msg: result.error.message ?? 'Error al guardar.' }); return; }
     setShowModal(false); load();
   };
 
-  const handleDelete = async (p: Proveedor) => {
-    if (p.activo) {
-      if (!confirm(`¿Desactivar a "${p.nombre}"?`)) return;
+  const confirmProviderAction = async () => {
+    if (!pendingAction) return;
+    const p = pendingAction.proveedor;
+    const action = pendingAction.action;
+    setPendingAction(null);
+    if (action === 'deactivate') {
       await repo.delete(p.id_proveedor);
     } else {
-      if (!confirm(`¿Eliminar definitivamente a "${p.nombre}"? Esta acción no se puede deshacer.`)) return;
       const result = await repo.hardDelete(p.id_proveedor);
       if (result.error) {
         setAlertMsg({ type: 'error', msg: result.error.message ?? 'No se pudo eliminar el proveedor.' });
@@ -97,7 +107,7 @@ export default function ProveedoresPage() {
                       <button
                         className="proveedor-card-action delete"
                         title={p.activo ? 'Desactivar' : 'Eliminar definitivamente'}
-                        onClick={() => handleDelete(p)}
+                        onClick={() => setPendingAction({ proveedor: p, action: p.activo ? 'deactivate' : 'delete' })}
                       >
                         <Trash2 size={14} />
                       </button>
@@ -119,9 +129,9 @@ export default function ProveedoresPage() {
         <Modal title={editing ? 'Editar proveedor' : 'Nuevo proveedor'} onClose={() => setShowModal(false)}>
           {alertMsg && <div><Alert type={alertMsg.type} message={alertMsg.msg} /></div>}
           <form onSubmit={handleSave}>
-            <Field label="Nombre *"><Input value={form.nombre} onChange={setF('nombre')} placeholder="Distribuidora XYZ" required /></Field>
+            <Field label="Nombre *"><Input value={form.nombre} onChange={setF('nombre')} placeholder="Distribuidora XYZ" /></Field>
             <Field label="Teléfono"><Input value={form.telefono ?? ''} onChange={setF('telefono')} placeholder="+34 600 000 000" /></Field>
-            <Field label="Email"><Input type="email" value={form.email ?? ''} onChange={setF('email')} placeholder="contacto@proveedor.com" /></Field>
+            <Field label="Email"><Input type="text" value={form.email ?? ''} onChange={setF('email')} placeholder="contacto@proveedor.com" /></Field>
             <Field label="Dirección"><Input value={form.direccion ?? ''} onChange={setF('direccion')} placeholder="Calle, ciudad..." /></Field>
             <Field label="Notas"><Textarea value={form.notas ?? ''} onChange={setF('notas')} rows={2} placeholder="Condiciones de pago, horarios..." /></Field>
             <div className="productos-modal-actions">
@@ -130,6 +140,20 @@ export default function ProveedoresPage() {
             </div>
           </form>
         </Modal>
+      )}
+      {pendingAction && (
+        <ConfirmDialog
+          title={pendingAction.action === 'deactivate' ? 'Desactivar proveedor' : 'Eliminar proveedor'}
+          message={
+            pendingAction.action === 'deactivate'
+              ? `¿Seguro que quieres desactivar a "${pendingAction.proveedor.nombre}"?`
+              : `¿Seguro que quieres eliminar definitivamente a "${pendingAction.proveedor.nombre}"?`
+          }
+          confirmText={pendingAction.action === 'deactivate' ? 'Desactivar' : 'Eliminar'}
+          danger
+          onCancel={() => setPendingAction(null)}
+          onConfirm={confirmProviderAction}
+        />
       )}
     </div>
   );

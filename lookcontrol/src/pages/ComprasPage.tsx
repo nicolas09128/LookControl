@@ -5,10 +5,12 @@ import type { Compra, CompraInput, DetalleCompraInput, EstadoCompra } from '../i
 import type { Proveedor } from '../interfaces/Proveedor';
 import type { Producto } from '../interfaces/Producto';
 import { useAuthStore } from '../store/authStore';
-import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Select, Textarea } from '../components/ui/index';
+import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Select, Textarea, ConfirmDialog } from '../components/ui/index';
 
 type LineaForm = { id_producto: number; cantidad: number; precio_unitario: number; fecha_caducidad: string; lote: string };
 const LINEA_BLANK: LineaForm = { id_producto: 0, cantidad: 1, precio_unitario: 0, fecha_caducidad: '', lote: '' };
+const todayISO = () => new Date().toISOString().split('T')[0];
+const generateInvoiceNumber = () => `FAC-${new Date().toISOString().replace(/\D/g, '').slice(0, 14)}`;
 
 export default function ComprasPage() {
   const { perfil } = useAuthStore();
@@ -21,7 +23,8 @@ export default function ComprasPage() {
   const [showModal, setShowModal]     = useState(false);
   const [saving, setSaving]           = useState(false);
   const [alertMsg, setAlertMsg]       = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
-  const [cabecera, setCabecera] = useState({ id_proveedor: '', numero_factura: '', fecha_compra: new Date().toISOString().split('T')[0], notas: '' });
+  const [pendingDelete, setPendingDelete] = useState<Compra | null>(null);
+  const [cabecera, setCabecera] = useState({ id_proveedor: '', numero_factura: generateInvoiceNumber(), fecha_compra: todayISO(), notas: '' });
   const [lineas, setLineas]           = useState<LineaForm[]>([{ ...LINEA_BLANK }]);
 
   const cRepo = useMemo(() => createCompraRepository(), []);
@@ -48,13 +51,17 @@ export default function ComprasPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!perfil || !perfil.id_peluqueria) return;
-    if (lineas.some(l => !l.id_producto || l.cantidad <= 0)) { setAlertMsg({ type: 'error', msg: 'Todas las líneas deben tener producto y cantidad válidos.' }); return; }
+    if (!cabecera.id_proveedor) { setAlertMsg({ type: 'error', msg: 'Selecciona un proveedor.' }); return; }
+    if (!cabecera.fecha_compra) { setAlertMsg({ type: 'error', msg: 'Selecciona la fecha de la compra.' }); return; }
+    if (lineas.some(l => !l.id_producto)) { setAlertMsg({ type: 'error', msg: 'Selecciona un producto en cada linea.' }); return; }
+    if (lineas.some(l => l.cantidad <= 0)) { setAlertMsg({ type: 'error', msg: 'La cantidad debe ser mayor que 0.' }); return; }
+    if (lineas.some(l => l.precio_unitario <= 0)) { setAlertMsg({ type: 'error', msg: 'El precio por unidad debe ser mayor que 0.' }); return; }
     setSaving(true);
     const cab: CompraInput = {
       id_peluqueria:  perfil.id_peluqueria,
-      id_proveedor:   cabecera.id_proveedor ? +cabecera.id_proveedor : null,
+      id_proveedor:   +cabecera.id_proveedor,
       id_perfil:      perfil.id_perfil,
-      numero_factura: cabecera.numero_factura || null,
+      numero_factura: cabecera.numero_factura,
       fecha_compra:   cabecera.fecha_compra,
       total:          total,
       notas:          cabecera.notas || null,
@@ -73,6 +80,18 @@ export default function ComprasPage() {
     load();
   };
 
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    const compra = pendingDelete;
+    setPendingDelete(null);
+    const result = await cRepo.delete(compra.id_compra);
+    if (result.error) {
+      setAlertMsg({ type: 'error', msg: result.error.message ?? 'No se pudo borrar la compra.' });
+      return;
+    }
+    load();
+  };
+
   const estadoBadge = (estado: EstadoCompra) => {
     const map: Record<EstadoCompra, 'success' | 'warning' | 'neutral'> = { recibido: 'success', pendiente: 'warning', cancelado: 'neutral' };
     return <Badge variant={map[estado]}>{estado}</Badge>;
@@ -83,7 +102,7 @@ export default function ComprasPage() {
       <PageHeader
         title="Compras"
         subtitle="Registro de pedidos y facturas"
-        action={isAdmin && <Btn onClick={() => { setAlertMsg(null); setCabecera({ id_proveedor: '', numero_factura: '', fecha_compra: new Date().toISOString().split('T')[0], notas: '' }); setLineas([{ ...LINEA_BLANK }]); setShowModal(true); }}><Plus size={16} />Nueva compra</Btn>}
+        action={isAdmin && <Btn onClick={() => { setAlertMsg(null); setCabecera({ id_proveedor: '', numero_factura: generateInvoiceNumber(), fecha_compra: todayISO(), notas: '' }); setLineas([{ ...LINEA_BLANK }]); setShowModal(true); }}><Plus size={16} />Nueva compra</Btn>}
       />
 
       {loading ? <div><Spinner size={32} /></div>
@@ -99,6 +118,19 @@ export default function ComprasPage() {
                   <div className="compra-meta">
                     {estadoBadge(c.estado)}
                     {c.total != null && <span className="compra-total">{c.total.toFixed(2)}€</span>}
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        className="compra-delete-btn"
+                        title="Borrar compra"
+                        onClick={event => {
+                          event.stopPropagation();
+                          setPendingDelete(c);
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )}
                     <span className="compra-expand-icon">
                       {expanded === c.id_compra ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </span>
@@ -142,15 +174,15 @@ export default function ComprasPage() {
             <div className="compra-form-row">
               <Field label="Proveedor">
                 <Select value={cabecera.id_proveedor} onChange={e => setCabecera(c => ({ ...c, id_proveedor: e.target.value }))}>
-                  <option value="">Sin proveedor</option>
+                  <option value="">Seleccionar proveedor...</option>
                   {proveedores.map(pv => <option key={pv.id_proveedor} value={pv.id_proveedor}>{pv.nombre}</option>)}
                 </Select>
               </Field>
               <Field label="Fecha">
-                <Input type="date" value={cabecera.fecha_compra} onChange={e => setCabecera(c => ({ ...c, fecha_compra: e.target.value }))} required />
+                <Input type="date" value={cabecera.fecha_compra} onChange={e => setCabecera(c => ({ ...c, fecha_compra: e.target.value }))} />
               </Field>
-              <Field label="Nº Factura">
-                <Input value={cabecera.numero_factura} onChange={e => setCabecera(c => ({ ...c, numero_factura: e.target.value }))} placeholder="FAC-001" />
+              <Field label="Factura generada">
+                <Input value={cabecera.numero_factura} readOnly />
               </Field>
             </div>
             <Field label="Notas"><Textarea value={cabecera.notas} onChange={e => setCabecera(c => ({ ...c, notas: e.target.value }))} rows={2} /></Field>
@@ -165,7 +197,7 @@ export default function ComprasPage() {
                 {lineas.map((l, i) => (
                   <div key={i} className="compra-linea-item">
                     <div>
-                      <Select value={l.id_producto} onChange={setLinea(i, 'id_producto')} required>
+                      <Select value={l.id_producto} onChange={setLinea(i, 'id_producto')}>
                         <option value="">Producto...</option>
                         {productos.map(p => <option key={p.id_producto} value={p.id_producto}>{p.nombre}</option>)}
                       </Select>
@@ -190,6 +222,16 @@ export default function ComprasPage() {
             </div>
           </form>
         </Modal>
+      )}
+      {pendingDelete && (
+        <ConfirmDialog
+          title="Borrar compra"
+          message={`¿Seguro que quieres borrar ${pendingDelete.numero_factura ? `la factura ${pendingDelete.numero_factura}` : 'esta compra'}?`}
+          confirmText="Borrar"
+          danger
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={confirmDelete}
+        />
       )}
     </div>
   );

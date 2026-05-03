@@ -5,7 +5,7 @@ import type { Producto, ProductoInput, UnidadMedida } from '../interfaces/Produc
 import type { Categoria } from '../interfaces/Categoria';
 import type { Proveedor } from '../interfaces/Proveedor';
 import { useAuthStore } from '../store/authStore';
-import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Select, Textarea } from '../components/ui/index';
+import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Select, Textarea, ConfirmDialog } from '../components/ui/index';
 
 const BLANK: ProductoInput = { id_categoria: 0, id_proveedor: null, nombre: '', descripcion: null, precio_coste: null, precio_venta: null, stock_actual: 0, stock_minimo: 5, unidad: 'ud', activo: true, id_peluqueria: 0 };
 
@@ -23,6 +23,7 @@ export default function ProductosPage() {
   const [form, setForm]             = useState<ProductoInput>(BLANK);
   const [saving, setSaving]         = useState(false);
   const [alertMsg, setAlertMsg]     = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Producto | null>(null);
 
   const prodRepo = useMemo(() => createProductoRepository(), []);
   const catRepo  = useMemo(() => createCategoriaRepository(), []);
@@ -54,9 +55,23 @@ export default function ProductosPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.id_categoria || !form.nombre.trim()) { setAlertMsg({ type: 'error', msg: 'Nombre y categoría son obligatorios.' }); return; }
+    const precioCosteTexto = form.precio_coste == null ? '' : String(form.precio_coste);
+    const precioVentaTexto = form.precio_venta == null ? '' : String(form.precio_venta);
+    const precioCoste = precioCosteTexto.trim() === '' ? null : Number(precioCosteTexto);
+    const precioVenta = precioVentaTexto.trim() === '' ? null : Number(precioVentaTexto);
+    if (!form.nombre.trim()) { setAlertMsg({ type: 'error', msg: 'El nombre del producto es obligatorio.' }); return; }
+    if (!form.id_categoria) { setAlertMsg({ type: 'error', msg: 'Selecciona una categoria.' }); return; }
+    if (precioCoste === null || Number.isNaN(precioCoste) || precioCoste <= 0) { setAlertMsg({ type: 'error', msg: 'El precio de coste debe ser mayor que 0.' }); return; }
     setSaving(true);
-    const payload = form;
+    const payload: ProductoInput = {
+      ...form,
+      id_categoria: Number(form.id_categoria),
+      id_proveedor: form.id_proveedor ? Number(form.id_proveedor) : null,
+      precio_coste: precioCoste,
+      precio_venta: precioVenta,
+      stock_actual: Number(form.stock_actual) || 0,
+      stock_minimo: Number(form.stock_minimo) || 0,
+    };
     const result = editing ? await prodRepo.update(editing.id_producto, payload) : await prodRepo.create(payload);
     setSaving(false);
     if (result.error) { setAlertMsg({ type: 'error', msg: result.error.message ?? 'Error al guardar.' }); return; }
@@ -64,8 +79,10 @@ export default function ProductosPage() {
     load();
   };
 
-  const handleDelete = async (p: Producto) => {
-    if (!confirm(`¿Eliminar "${p.nombre}"?`)) return;
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    const p = pendingDelete;
+    setPendingDelete(null);
     await prodRepo.delete(p.id_producto);
     load();
   };
@@ -122,7 +139,7 @@ export default function ProductosPage() {
                       {isAdmin && (
                         <div className="productos-actions">
                           <button className="productos-action-btn"       onClick={() => openEdit(p)}><Pencil size={14} /></button>
-                          <button className="productos-action-btn delete" onClick={() => handleDelete(p)}><Trash2 size={14} /></button>
+                          <button className="productos-action-btn delete" onClick={() => setPendingDelete(p)}><Trash2 size={14} /></button>
                         </div>
                       )}
                     </td>
@@ -139,11 +156,11 @@ export default function ProductosPage() {
           <form className="productos-modal-form" onSubmit={handleSave}>
             <div className="productos-modal-form-full">
               <Field label="Nombre *">
-                <Input value={form.nombre} onChange={setF('nombre')} placeholder="Tinte permanente..." required />
+                <Input value={form.nombre} onChange={setF('nombre')} placeholder="Tinte permanente..." />
               </Field>
             </div>
             <Field label="Categoría *">
-              <Select value={form.id_categoria} onChange={setF('id_categoria')} required>
+              <Select value={form.id_categoria} onChange={setF('id_categoria')}>
                 <option value="">Seleccionar...</option>
                 {categorias.map(c => <option key={c.id_categoria} value={c.id_categoria}>{c.nombre}</option>)}
               </Select>
@@ -182,6 +199,16 @@ export default function ProductosPage() {
             </div>
           </form>
         </Modal>
+      )}
+      {pendingDelete && (
+        <ConfirmDialog
+          title="Eliminar producto"
+          message={`¿Seguro que quieres eliminar "${pendingDelete.nombre}"?`}
+          confirmText="Eliminar"
+          danger
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={confirmDelete}
+        />
       )}
     </div>
   );

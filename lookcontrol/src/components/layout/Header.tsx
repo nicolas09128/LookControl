@@ -53,7 +53,8 @@ export default function Header() {
 
           <nav className="header-nav">
             <NavLink to="/nosotros" className={navLinkClass}>Nosotros</NavLink>
-            <NavLink to="/precios" className={navLinkClass}>Precios</NavLink>
+            <NavLink to="/faq" className={navLinkClass}>FAQ</NavLink>
+            <NavLink to="/contacto" className={navLinkClass}>Contacto</NavLink>
           </nav>
         </div>
 
@@ -78,7 +79,8 @@ export default function Header() {
     {mobileMenuOpen && (
       <div className="mobile-menu-dropdown">
         <NavLink to="/nosotros" className="mobile-nav-link">Nosotros</NavLink>
-        <NavLink to="/precios" className="mobile-nav-link">Precios</NavLink>
+        <NavLink to="/faq" className="mobile-nav-link">FAQ</NavLink>
+        <NavLink to="/contacto" className="mobile-nav-link">Contacto</NavLink>
         <div className="mobile-divider" />
         <Link to="/login" className="mobile-nav-link">Iniciar Sesión</Link>
         <Link to="/register" className="mobile-nav-link-primary">Empezar gratis</Link>

@@ -5,13 +5,14 @@ import {
   TrendingUp, Scissors, Users, User, LogOut, Menu, X, ChevronRight, Link2
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import ChatBot from '../ui/ChatBot';
 
 const NAV_ITEMS = [
   { to: '/dashboard',   label: 'Panel de Control', icon: LayoutDashboard, roles: ['admin', 'user', 'empleado'] },
   { to: '/productos',   label: 'Productos',    icon: Package,         roles: ['admin', 'user', 'empleado'] },
   { to: '/stock',       label: 'Stock',        icon: TrendingUp,      roles: ['admin', 'user', 'empleado'] },
   { to: '/compras',     label: 'Compras',      icon: ShoppingCart,    roles: ['admin', 'user', 'empleado'] },
-  { to: '/proveedores', label: 'Proveedores',  icon: Truck,           roles: ['admin', 'user', 'empleado'] },
+  { to: '/proveedores', label: 'Proveedores',  icon: Truck,           roles: ['admin', 'user'] },
   { to: '/servicios',   label: 'Servicios',    icon: Scissors,        roles: ['admin', 'user', 'empleado'] },
   { to: '/admin',       label: 'Administrar',  icon: Users,           roles: ['admin'] },
 ];
@@ -222,29 +223,29 @@ export default function AppLayout() {
   const needsLink = perfil?.rol === 'empleado' && !perfil?.id_peluqueria;
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="app-sidebar-content">
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-(--border-base)">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-(--brand-primary) flex items-center justify-center">
-            <Scissors size={16} className="text-black" />
+      <div className="app-sidebar-header">
+        <div className="app-sidebar-brand">
+          <div className="app-sidebar-logo">
+            <Scissors size={16} />
           </div>
-          <span className="font-bold text-lg text-(--text-primary) tracking-tight">LookControl</span>
+          <span className="app-sidebar-brand-text">LookControl</span>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-6 flex flex-col gap-1 overflow-y-auto">
+      <nav className="app-sidebar-nav">
         {visibleItems.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+              `app-sidebar-link ${
                 isActive
                   ? 'nav-active'
-                  : 'text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-elevated)'
+                  : ''
               }`
             }
           >
@@ -255,27 +256,27 @@ export default function AppLayout() {
       </nav>
 
       {/* User footer */}
-      <div className="px-3 py-4 border-t border-(--border-base) flex flex-col gap-2">
+      <div className="app-sidebar-footer">
         <NavLink
           to="/profile"
           onClick={() => setSidebarOpen(false)}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+            `app-sidebar-profile ${
               isActive
                 ? 'nav-active'
-                : 'text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-elevated)'
+                : ''
             }`
           }
         >
           {perfil?.avatar_url
-            ? <img src={perfil.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
+            ? <img src={perfil.avatar_url} alt="" className="app-sidebar-avatar" />
             : <User size={18} />
           }
-          <div className="flex-1 min-w-0">
-            <p className="truncate text-xs font-semibold text-(--text-primary)">
+          <div className="app-sidebar-user-text">
+            <p className="app-sidebar-user-name">
               {perfil?.nombre_completo ?? perfil?.email}
             </p>
-            <p className="truncate text-[10px] text-(--text-muted) capitalize">{perfil?.rol}</p>
+            <p className="app-sidebar-user-role">{perfil?.rol}</p>
           </div>
           <ChevronRight size={14} />
         </NavLink>
@@ -291,22 +292,22 @@ export default function AppLayout() {
   );
 
   return (
-    <div className="flex h-screen bg-(--bg-base) overflow-hidden">
+    <div className="app-shell">
       {/* Modal de vinculación para empleados pendientes */}
       {needsLink && <EmployeeLinkModal />}
 
       {/* Sidebar desktop */}
-      <aside className="hidden md:flex w-60 shrink-0 flex-col bg-(--bg-surface) border-r border-(--border-base)">
+      <aside className="app-sidebar app-sidebar-desktop">
         <SidebarContent />
       </aside>
 
       {/* Sidebar mobile overlay */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="fixed inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
-          <aside className="relative w-64 bg-(--bg-surface) border-r border-(--border-base) flex flex-col z-10">
+        <div className="app-sidebar-overlay">
+          <div className="app-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+          <aside className="app-sidebar app-sidebar-mobile">
             <button
-              className="absolute top-4 right-4 text-(--text-secondary)"
+              className="app-sidebar-close"
               onClick={() => setSidebarOpen(false)}
             >
               <X size={20} />
@@ -317,19 +318,21 @@ export default function AppLayout() {
       )}
 
       {/* Main */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="app-main">
         {/* Topbar mobile */}
-        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-(--border-base) bg-(--bg-surface)">
-          <button onClick={() => setSidebarOpen(true)} className="text-(--text-secondary)">
+        <header className="app-mobile-header">
+          <button onClick={() => setSidebarOpen(true)} className="app-mobile-menu-button">
             <Menu size={22} />
           </button>
-          <span className="font-bold text-(--text-primary)">LookControl</span>
+          <span className="app-mobile-title">LookControl</span>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="app-main-content">
           <Outlet />
         </main>
       </div>
+
+      <ChatBot />
     </div>
   );
 }

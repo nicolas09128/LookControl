@@ -8,7 +8,7 @@ const FEATURES = [
   { icon: Package,    title: 'Inventario en tiempo real', desc: 'Controla cada producto, su stock mínimo y recibe alertas automáticas antes de quedarte sin existencias.' },
   { icon: TrendingUp, title: 'Trazabilidad total',        desc: 'Cada movimiento queda registrado: quién lo hizo, qué producto, cuándo y por qué. Cero opacidad.' },
   { icon: ShoppingCart,'title': 'Gestión de compras',     desc: 'Pedidos, facturas y proveedores en un solo flujo. Desde el presupuesto hasta la recepción.' },
-  { icon: Scissors,   title: 'Consumo por servicio',      desc: 'Registra qué productos uses en cada servicio. Sabe exactamente cuánto te cuesta cada trabajo.' },
+  { icon: Scissors,   title: 'Consumo por servicio',      desc: 'Registra qué productos usas en cada servicio. Sabe exactamente cuánto te cuesta cada trabajo.' },
   { icon: Users,      title: 'Multi-usuario',             desc: 'Administradores y empleados con permisos diferenciados. Cada uno ve lo que necesita.' },
   { icon: BarChart3,  title: 'Dashboard inteligente',     desc: 'Vista general del negocio: alertas de stock bajo, últimas compras y métricas clave de un vistazo.' },
 ];
@@ -21,7 +21,7 @@ const WHY_US = [
 
 const DIFFERENTIATORS = [
   'Soft-delete: nada se borra definitivamente, todo es recuperable',
-  'Multipeluquería: un código de invitación por local, empleados vinculados por salon',
+  'Multipeluquería: un código de invitación por local, empleados vinculados por salón',
   'Historial inmutable de movimientos de stock para auditorías',
   'Alertas de bajo stock configurables por producto',
   'Gestión de fechas de caducidad y lotes en cada compra',
@@ -178,13 +178,13 @@ export default function NosotrosPage() {
           }}>
             Crear cuenta gratis <ArrowRight size={16} />
           </Link>
-          <Link to="/precios" style={{
+          <Link to="/faq" style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             padding: '14px 28px', borderRadius: '12px',
             border: '1px solid #334155', background: 'transparent',
             color: '#94A3B8', fontWeight: 600, fontSize: '15px', textDecoration: 'none',
           }}>
-            Ver planes y precios
+            Ver preguntas frecuentes
           </Link>
         </div>
       </section>
