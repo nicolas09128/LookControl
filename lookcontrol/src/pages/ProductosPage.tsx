@@ -8,6 +8,16 @@ import { useAuthStore } from '../store/authStore';
 import { Modal, Badge, PageHeader, Spinner, EmptyState, Alert, Btn, Field, Input, Select, Textarea, ConfirmDialog } from '../components/ui/index';
 
 const BLANK: ProductoInput = { id_categoria: 0, id_proveedor: null, nombre: '', descripcion: null, precio_coste: null, precio_venta: null, stock_actual: 0, stock_minimo: 5, unidad: 'ud', activo: true, id_peluqueria: 0 };
+const PRODUCT_CATEGORY_OPTIONS = [
+  { label: 'Champu', aliases: ['champu'] },
+  { label: 'Acondicionador', aliases: ['acondicionador'] },
+  { label: 'Coloracion', aliases: ['coloracion'] },
+  { label: 'Tratamiento', aliases: ['tratamiento', 'tratamientos'] },
+  { label: 'Herramienta', aliases: ['herramienta', 'herramientas'] },
+  { label: 'Otro', aliases: ['otro', 'otros'] },
+];
+const normalizeCategoryName = (name: string) =>
+  name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
 
 export default function ProductosPage() {
   const { perfil } = useAuthStore();
@@ -44,6 +54,14 @@ export default function ProductosPage() {
     const matchCat    = !filterCat || String(p.id_categoria) === filterCat;
     return matchSearch && matchCat;
   }), [productos, search, filterCat]);
+  const productCategoryOptions = useMemo(() => (
+    PRODUCT_CATEGORY_OPTIONS
+      .map(option => {
+        const categoria = categorias.find(c => option.aliases.includes(normalizeCategoryName(c.nombre)));
+        return categoria ? { ...categoria, nombre: option.label } : null;
+      })
+      .filter((categoria): categoria is Categoria => categoria !== null)
+  ), [categorias]);
 
   const openCreate = () => { setEditing(null); setForm({ ...BLANK, id_peluqueria: perfil?.id_peluqueria || 0 }); setAlertMsg(null); setShowModal(true); };
   const openEdit   = (p: Producto) => {
@@ -162,7 +180,7 @@ export default function ProductosPage() {
             <Field label="Categoría *">
               <Select value={form.id_categoria} onChange={setF('id_categoria')}>
                 <option value="">Seleccionar...</option>
-                {categorias.map(c => <option key={c.id_categoria} value={c.id_categoria}>{c.nombre}</option>)}
+                {productCategoryOptions.map(c => <option key={c.id_categoria} value={c.id_categoria}>{c.nombre}</option>)}
               </Select>
             </Field>
             <Field label="Proveedor">

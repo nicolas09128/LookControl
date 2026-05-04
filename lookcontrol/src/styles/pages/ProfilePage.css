@@ -70,6 +70,98 @@
   color: #000;
 }
 
+.profile-avatar-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  left: 0;
+  z-index: 20;
+  width: 14rem;
+  padding: 0.5rem;
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-md);
+  background-color: var(--dark-surface);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.profile-avatar-menu::before {
+  content: "";
+  position: absolute;
+  top: -0.4rem;
+  left: 4.2rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--dark-surface);
+  border-left: 1px solid var(--dark-border);
+  border-top: 1px solid var(--dark-border);
+  transform: rotate(45deg);
+}
+
+.profile-avatar-menu-option,
+.profile-avatar-menu-upload {
+  min-height: 3.2rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.profile-avatar-menu-option {
+  width: 100%;
+  padding: 0.35rem;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: left;
+}
+
+.profile-avatar-menu-option img {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  max-width: 2.5rem;
+  max-height: 2.5rem;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 1px solid var(--dark-border);
+  display: block;
+}
+
+.profile-avatar-menu-option span,
+.profile-avatar-menu-upload span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.profile-avatar-menu-option:hover,
+.profile-avatar-menu-upload:hover,
+.profile-avatar-menu-option.selected {
+  border-color: var(--primary-action);
+  background-color: rgba(56, 189, 248, 0.12);
+}
+
+.profile-avatar-menu-option:disabled,
+.profile-avatar-menu-upload:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.profile-avatar-menu-upload {
+  width: 100%;
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.55rem;
+}
+
 .profile-info h3 {
   font-weight: 500;
   margin-bottom: var(--spacing-xs);
@@ -182,5 +274,10 @@
 
   .profile-form-button {
     align-self: flex-start;
+  }
+
+  .profile-avatar-menu {
+    left: 0;
+    width: min(14rem, calc(100vw - 2rem));
   }
 }

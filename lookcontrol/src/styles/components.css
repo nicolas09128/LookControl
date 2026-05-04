@@ -617,9 +617,15 @@
 .app-sidebar-avatar {
   width: 1.5rem;
   height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  max-width: 1.5rem;
+  max-height: 1.5rem;
   border-radius: var(--radius-full);
   object-fit: cover;
-  flex-shrink: 0;
+  display: block;
+  flex: 0 0 1.5rem;
+  overflow: hidden;
 }
 
 .app-sidebar-user-text {

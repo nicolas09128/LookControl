@@ -7,6 +7,7 @@ export interface Perfil {
   nombre_peluqueria?: string | null;
   email: string;
   avatar_url: string | null;
+  avatar_path?: string | null;
   rol: 'admin' | 'empleado' | 'pendiente' | 'user';
   permisos: string[];
   codigo_invitacion?: string | null;

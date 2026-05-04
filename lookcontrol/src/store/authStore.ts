@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { Perfil, RegisterData } from '../interfaces/Perfil';
 import { supabase } from '../database/supabase/Client';
 import { createUserRepository } from '../database/repositories';
+import { getAvatarDisplayUrl, type DefaultAvatarPath } from '../database/supabase/avatarStorage';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -25,6 +26,7 @@ interface AuthState {
   updateNombre: (nombre: string) => Promise<{ error?: string }>;
   sendPasswordRecovery: () => Promise<{ error?: string }>;
   uploadAvatar: (file: File) => Promise<{ error?: string }>;
+  selectDefaultAvatar: (path: DefaultAvatarPath) => Promise<{ error?: string }>;
   setupOwnerPeluqueria: () => Promise<{ error?: string }>;
   linkEmployeePeluqueria: (code: string) => Promise<{ error?: string }>;
 }
@@ -71,10 +73,23 @@ export const useAuthStore = create<AuthState>()(
           peluqueria?: { nombre?: string; codigo_invitacion?: string };
         };
 
+        const avatarPath = typeof session.user.user_metadata?.avatar_path === 'string'
+          ? session.user.user_metadata.avatar_path
+          : null;
+        const metadataAvatarUrl = typeof session.user.user_metadata?.avatar_url === 'string'
+          && !session.user.user_metadata.avatar_url.startsWith('data:image/')
+          ? session.user.user_metadata.avatar_url
+          : null;
+        const avatarUrl = avatarPath
+          ? await getAvatarDisplayUrl(avatarPath)
+          : metadataAvatarUrl;
+
         const perfilFinal: Perfil = {
           ...perfilData,
           nombre_peluqueria: perfilData.peluqueria?.nombre ?? perfilData.nombre_peluqueria,
           codigo_invitacion: perfilData.peluqueria?.codigo_invitacion ?? perfilData.codigo_invitacion,
+          avatar_url: avatarUrl,
+          avatar_path: avatarPath,
         };
 
         set({ perfil: perfilFinal, isAuthenticated: true, loading: false });
@@ -211,6 +226,18 @@ export const useAuthStore = create<AuthState>()(
         if (error) return { error: error.message };
 
         set({ perfil: { ...perfil, avatar_url: avatarUrl! } });
+        return {};
+      },
+
+      selectDefaultAvatar: async (path: DefaultAvatarPath) => {
+        const { perfil } = get();
+        if (!perfil) return { error: 'No hay sesión activa' };
+
+        const repo = createUserRepository();
+        const { data: avatarUrl, error } = await repo.selectDefaultAvatar(perfil.user_id, path);
+        if (error) return { error: error.message };
+
+        set({ perfil: { ...perfil, avatar_url: avatarUrl!, avatar_path: path } });
         return {};
       },
     }),
