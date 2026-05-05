@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Zap, Shield, BarChart3, Users, Clock, Package,
@@ -28,7 +29,7 @@ const DIFFERENTIATORS = [
   'Roles granulares: admin ve todo, empleado solo opera',
 ];
 
-const s = {
+const darkS = {
   page: { background: '#0F172A', minHeight: '100vh', color: '#F1F5F9', fontFamily: 'system-ui, sans-serif' } as React.CSSProperties,
   hero: {
     padding: '96px 24px 80px',
@@ -68,7 +69,51 @@ const s = {
   },
 };
 
+const lightS = {
+  ...darkS,
+  page: { ...darkS.page, background: '#EAF0F7', color: '#0F172A' } as React.CSSProperties,
+  hero: {
+    ...darkS.hero,
+    background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(56,189,248,0.18) 0%, transparent 70%)',
+  },
+  h1: { ...darkS.h1, color: '#0F172A' },
+  subtitle: { ...darkS.subtitle, color: '#475569' },
+  sectionTitle: { ...darkS.sectionTitle, color: '#0F172A' },
+  sectionDesc: { ...darkS.sectionDesc, color: '#475569' },
+  card: {
+    ...darkS.card,
+    background: 'rgba(255,255,255,0.86)',
+    border: '1px solid #CBD5E1',
+    boxShadow: '0 14px 32px rgba(15,23,42,0.08)',
+  } as React.CSSProperties,
+  cardTitle: { ...darkS.cardTitle, color: '#0F172A' },
+  cardDesc: { ...darkS.cardDesc, color: '#475569' },
+  divider: {
+    ...darkS.divider,
+    background: 'linear-gradient(90deg, transparent, #CBD5E1 20%, #CBD5E1 80%, transparent)',
+  },
+  cta: {
+    ...darkS.cta,
+    background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(56,189,248,0.14) 0%, transparent 70%)',
+  },
+};
+
 export default function NosotrosPage() {
+  const [isLight, setIsLight] = useState(() => document.documentElement.dataset.theme === 'light');
+  const s = isLight ? lightS : darkS;
+  const cardBorder = isLight ? '#CBD5E1' : '#1E293B';
+  const cardHoverBorder = isLight ? 'rgba(2,132,199,0.38)' : 'rgba(56,189,248,0.3)';
+
+  useEffect(() => {
+    const updateTheme = () => setIsLight(document.documentElement.dataset.theme === 'light');
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div style={s.page}>
 
@@ -102,8 +147,8 @@ export default function NosotrosPage() {
         <div style={s.grid3}>
           {FEATURES.map(({ icon: Icon, title, desc }) => (
             <div key={title} style={s.card}
-              onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(56,189,248,0.3)')}
-              onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.borderColor = '#1E293B')}
+              onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.borderColor = cardHoverBorder)}
+              onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.borderColor = cardBorder)}
             >
               <div style={s.iconWrap}><Icon size={20} color="#38BDF8" /></div>
               <p style={s.cardTitle}>{title}</p>
@@ -124,8 +169,11 @@ export default function NosotrosPage() {
           {WHY_US.map(({ icon: Icon, title, desc }) => (
             <div key={title} style={{
               padding: '32px', borderRadius: '20px',
-              background: 'linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8))',
-              border: '1px solid #1E293B',
+              background: isLight
+                ? 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(241,245,249,0.92))'
+                : 'linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8))',
+              border: `1px solid ${cardBorder}`,
+              boxShadow: isLight ? '0 14px 32px rgba(15,23,42,0.08)' : 'none',
             }}>
               <div style={{ ...s.iconWrap, marginBottom: '20px', width: '48px', height: '48px', borderRadius: '14px' }}>
                 <Icon size={22} color="#38BDF8" />
@@ -145,7 +193,7 @@ export default function NosotrosPage() {
           <div>
             <p style={s.sectionLabel}>Qué nos hace diferentes</p>
             <h2 style={{ ...s.sectionTitle, marginBottom: '16px' }}>Los detalles que marcan la diferencia</h2>
-            <p style={{ fontSize: '14px', color: '#94A3B8', lineHeight: 1.7, margin: 0 }}>
+            <p style={{ fontSize: '14px', color: isLight ? '#475569' : '#94A3B8', lineHeight: 1.7, margin: 0 }}>
               Cualquier software gestiona listas. LookControl gestiona tu negocio con la lógica
               específica de una peluquería: caducidades, lotes, multi-empleado y trazabilidad real.
             </p>
@@ -154,7 +202,7 @@ export default function NosotrosPage() {
             {DIFFERENTIATORS.map(item => (
               <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                 <CheckCircle size={16} color="#38BDF8" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ fontSize: '13px', color: '#CBD5E1', lineHeight: 1.5 }}>{item}</span>
+                <span style={{ fontSize: '13px', color: isLight ? '#334155' : '#CBD5E1', lineHeight: 1.5 }}>{item}</span>
               </li>
             ))}
           </ul>
@@ -181,8 +229,10 @@ export default function NosotrosPage() {
           <Link to="/faq" style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             padding: '14px 28px', borderRadius: '12px',
-            border: '1px solid #334155', background: 'transparent',
-            color: '#94A3B8', fontWeight: 600, fontSize: '15px', textDecoration: 'none',
+            border: `1px solid ${isLight ? '#CBD5E1' : '#334155'}`,
+            background: isLight ? 'rgba(255,255,255,0.72)' : 'transparent',
+            color: isLight ? '#475569' : '#94A3B8',
+            fontWeight: 600, fontSize: '15px', textDecoration: 'none',
           }}>
             Ver preguntas frecuentes
           </Link>

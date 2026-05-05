@@ -1,54 +1,37 @@
 import { Link } from 'react-router-dom';
 import { Package, TrendingUp, ShoppingCart, Scissors, ArrowRight } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { useAuthStore } from '../store/authStore';
 
 const FEATURES = [
-  { icon: Package,      title: 'Inventario en tiempo real',  desc: 'Control total del stock con alertas automáticas de productos bajo mínimo.' },
-  { icon: TrendingUp,   title: 'Trazabilidad completa',      desc: 'Historial de cada movimiento: quién, qué cantidad y cuándo.' },
-  { icon: ShoppingCart, title: 'Gestión de compras',         desc: 'Registra pedidos, productos y proveedores en un solo flujo.' },
-  { icon: Scissors,     title: 'Registro de servicios',      desc: 'Vincula los productos consumidos a cada servicio realizado.' },
+  { icon: Package, title: 'Inventario en tiempo real', desc: 'Control total del stock con alertas automáticas de productos bajo mínimo.' },
+  { icon: TrendingUp, title: 'Trazabilidad completa', desc: 'Historial de cada movimiento: quién, qué cantidad y cuándo.' },
+  { icon: ShoppingCart, title: 'Gestión de compras', desc: 'Registra pedidos, productos y proveedores en un solo flujo.' },
+  { icon: Scissors, title: 'Registro de servicios', desc: 'Vincula los productos consumidos a cada servicio realizado.' },
 ];
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuthStore();
-  const ctaTo   = isAuthenticated ? '/dashboard' : '/register';
+  const ctaTo = isAuthenticated ? '/dashboard' : '/register';
   const ctaText = isAuthenticated ? 'Ir al panel' : 'Empezar gratis';
 
   return (
     <div>
-      {/* ── Hero ── */}
-<section 
-        className="landing-hero" 
-        style={{ 
-          position: 'relative', 
-          backgroundColor: '#0F172A' // Aplicamos el color base aquí
-        }}
-      >
-        {/* Contenedor de la animación con z-index negativo */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0, // Encima del background pero debajo del contenido
-          opacity: 0.8
-        }}>
+      <section className="landing-hero">
+        <div className="landing-hero-animation">
           <DotLottieReact
             src="https://lottie.host/c634b193-5adb-42ef-b1eb-c7bc466b1066/sq8NAkmeoz.lottie"
             loop
             autoplay
-            style={{ 
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'cover' 
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
             }}
           />
         </div>
 
-        {/* El contenido con z-index mayor para estar al frente */}
-        <div className="landing-hero-content" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="landing-hero-content">
           <span className="landing-badge">Gestión integral para peluquerías</span>
           <h1 className="landing-title">
             Deja de gestionar con{' '}
@@ -65,7 +48,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ── */}
       <section className="landing-features">
         <div className="landing-features-container">
           <div className="landing-features-header">
@@ -84,7 +66,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA Final ── */}
       <section className="landing-cta">
         <div className="landing-cta-container">
           <h2 className="landing-cta-title">¿Listo para tomar el control?</h2>

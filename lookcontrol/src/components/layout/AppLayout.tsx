@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import ChatBot from '../ui/ChatBot';
+import ThemeToggle from '../ui/ThemeToggle';
 import EmployeeLinkModal from './EmployeeLinkModal';
 
 const navItems = [
@@ -50,6 +51,7 @@ export default function AppLayout() {
           </div>
           <span className="app-sidebar-brand-text">LookControl</span>
         </div>
+        <ThemeToggle />
       </div>
 
       <nav className="app-sidebar-nav">
@@ -116,6 +118,7 @@ export default function AppLayout() {
             <Menu size={22} />
           </button>
           <span className="app-mobile-title">LookControl</span>
+          <ThemeToggle />
         </header>
 
         <main className="app-main-content">

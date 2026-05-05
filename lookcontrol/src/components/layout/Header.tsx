@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Scissors, Menu, X } from 'lucide-react';
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,6 +64,7 @@ export default function Header() {
           <div className="header-actions">
             <Link to="/login" className="header-btn-ghost no-underline">Iniciar Sesión</Link>
             <Link to="/register" className="header-btn-primary no-underline">Empezar gratis</Link>
+            <ThemeToggle />
           </div>
 
           <button 
@@ -84,6 +86,9 @@ export default function Header() {
         <div className="mobile-divider" />
         <Link to="/login" className="mobile-nav-link">Iniciar Sesión</Link>
         <Link to="/register" className="mobile-nav-link-primary">Empezar gratis</Link>
+        <div className="mobile-theme-toggle">
+          <ThemeToggle />
+        </div>
       </div>
     )}
   </>

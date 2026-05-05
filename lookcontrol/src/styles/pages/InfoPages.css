@@ -278,3 +278,50 @@
     padding-left: 1.25rem;
   }
 }
+
+html[data-theme='light'] .info-page {
+  background: #EAF0F7;
+  color: #0F172A;
+}
+
+html[data-theme='light'] .info-hero {
+  background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(56, 189, 248, 0.18), transparent 70%);
+}
+
+html[data-theme='light'] .info-kicker {
+  border-color: rgba(2, 132, 199, 0.28);
+  background: rgba(56, 189, 248, 0.14);
+  color: #0369A1;
+}
+
+html[data-theme='light'] .contact-panel,
+html[data-theme='light'] .contact-card,
+html[data-theme='light'] .faq-item,
+html[data-theme='light'] .faq-cta {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: #CBD5E1;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme='light'] .contact-form input,
+html[data-theme='light'] .contact-form select,
+html[data-theme='light'] .contact-form textarea {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+html[data-theme='light'] .contact-form input::placeholder,
+html[data-theme='light'] .contact-form textarea::placeholder {
+  color: #64748B;
+}
+
+html[data-theme='light'] .contact-success {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.28);
+  color: #047857;
+}
+
+html[data-theme='light'] .faq-item[open] {
+  border-color: rgba(2, 132, 199, 0.55);
+}
