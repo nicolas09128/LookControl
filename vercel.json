@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "cd lookcontrol && npm install",
+  "buildCommand": "cd lookcontrol && npm run build",
+  "outputDirectory": "lookcontrol/dist",
+  "rewrites": [
+    {
+      "source": "/:path((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
