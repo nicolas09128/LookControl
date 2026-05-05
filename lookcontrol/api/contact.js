@@ -76,7 +76,7 @@ const connectSmtp = ({ host, port, secure }) =>
     socket.once('error', reject);
   });
 
-async function sendMail({ from, to, replyTo, subject, text }) {
+export async function sendMail({ from, to, replyTo, subject, text }) {
   const host = process.env.SMTP_HOST ?? 'smtp.gmail.com';
   const port = Number(process.env.SMTP_PORT ?? 465);
   const user = process.env.SMTP_USER ?? CONTACT_EMAIL;
