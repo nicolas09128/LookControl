@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Camera, User, Mail, Shield, Calendar, Building, Key, Upload } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
-import { PageHeader, Alert, Btn, Field, Input } from '../components/ui/index';
+import { PageHeader, Alert, Btn, Field, Input, PasswordInput } from '../components/ui/index';
 import {
   DEFAULT_AVATARS,
   MAX_AVATAR_UPLOAD_SIZE,
@@ -11,11 +11,13 @@ import {
 } from '../database/supabase/avatarStorage';
 
 export default function ProfilePage() {
-  const { perfil, updateNombre, sendPasswordRecovery, uploadAvatar, selectDefaultAvatar } = useAuthStore();
+  const { perfil, updateNombre, updatePassword, uploadAvatar, selectDefaultAvatar } = useAuthStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const [nombre, setNombre] = useState(perfil?.nombre_completo ?? '');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [savingNombre, setSavingNombre] = useState(false);
   const [savingPwd, setSavingPwd] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -65,11 +67,31 @@ export default function ProfilePage() {
     setAlertNombre(r.error ? { type: 'error', msg: r.error } : { type: 'success', msg: 'Nombre actualizado.' });
   };
 
-  const handlePwd = async () => {
+  const handlePwd = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newPassword.length < 8) {
+      setAlertPwd({ type: 'error', msg: 'La contraseña debe tener al menos 8 caracteres.' });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setAlertPwd({ type: 'error', msg: 'Las contraseñas no coinciden.' });
+      return;
+    }
+
     setSavingPwd(true);
-    const r = await sendPasswordRecovery();
+    const r = await updatePassword(newPassword);
     setSavingPwd(false);
-    setAlertPwd(r.error ? { type: 'error', msg: r.error } : { type: 'success', msg: 'Email de recuperación enviado. Revisa tu bandeja.' });
+
+    if (r.error) {
+      setAlertPwd({ type: 'error', msg: r.error });
+      return;
+    }
+
+    setNewPassword('');
+    setConfirmPassword('');
+    setAlertPwd({ type: 'success', msg: 'Contraseña actualizada correctamente.' });
   };
 
   const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,9 +250,29 @@ export default function ProfilePage() {
 
       <div className="profile-password-section">
         <h2 className="profile-password-title">Contraseña</h2>
-        <p className="profile-password-description">Te enviaremos un email con un enlace para cambiar tu contraseña.</p>
+        <p className="profile-password-description">Cambia tu contraseña directamente desde tu cuenta.</p>
         {alertPwd && <div><Alert type={alertPwd.type} message={alertPwd.msg} /></div>}
-        <Btn variant="ghost" loading={savingPwd} onClick={handlePwd}>Enviar enlace de recuperación</Btn>
+        <form className="profile-password-form" onSubmit={handlePwd}>
+          <Field label="Nueva contraseña">
+            <PasswordInput
+              placeholder="Nueva contraseña"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+              required
+              minLength={8}
+            />
+          </Field>
+          <Field label="Repetir contraseña">
+            <PasswordInput
+              placeholder="Repetir contraseña"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              required
+              minLength={8}
+            />
+          </Field>
+          <Btn type="submit" loading={savingPwd}>Cambiar contraseña</Btn>
+        </form>
       </div>
     </div>
   );

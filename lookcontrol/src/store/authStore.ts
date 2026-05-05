@@ -24,7 +24,7 @@ interface AuthState {
   initSession: () => Promise<void>;
   register: (data: RegisterData) => Promise<{ error?: string }>;
   updateNombre: (nombre: string) => Promise<{ error?: string }>;
-  sendPasswordRecovery: () => Promise<{ error?: string }>;
+  updatePassword: (password: string) => Promise<{ error?: string }>;
   uploadAvatar: (file: File) => Promise<{ error?: string }>;
   selectDefaultAvatar: (path: DefaultAvatarPath) => Promise<{ error?: string }>;
   setupOwnerPeluqueria: () => Promise<{ error?: string }>;
@@ -206,13 +206,11 @@ export const useAuthStore = create<AuthState>()(
         return {};
       },
 
-      sendPasswordRecovery: async () => {
+      updatePassword: async (password: string) => {
         const { perfil } = get();
         if (!perfil) return { error: 'No hay sesión activa' };
 
-        const { error } = await supabase.auth.resetPasswordForEmail(perfil.email, {
-          redirectTo: `${window.location.origin}/login`,
-        });
+        const { error } = await supabase.auth.updateUser({ password });
         if (error) return { error: error.message };
         return {};
       },
