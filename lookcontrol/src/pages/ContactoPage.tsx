@@ -68,7 +68,7 @@ export default function ContactoPage() {
             <Mail size={20} />
             <div>
               <span>Email</span>
-              <a href="mailto:contacto@lookcontrol.app">contacto@lookcontrol.app</a>
+              <a href="mailto:contactolookcontrol@gmail.com">contactolookcontrol@gmail.com</a>
             </div>
           </div>
           <div className="contact-card">

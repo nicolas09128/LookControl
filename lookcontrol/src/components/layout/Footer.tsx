@@ -89,15 +89,15 @@ export default function Footer() {
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <a
-                href="mailto:contacto@lookcontrol.app"
+                href="mailto:contactolookcontrol@gmail.com"
                 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#38BDF8')}
                 onMouseLeave={e => (e.currentTarget.style.color = '#94A3B8')}
               >
-                <Mail size={14} /> contacto@lookcontrol.app
+                <Mail size={14} /> contactolookcontrol@gmail.com
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/nicolas09128/LookControl"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}

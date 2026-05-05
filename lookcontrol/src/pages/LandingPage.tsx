@@ -6,7 +6,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 const FEATURES = [
   { icon: Package,      title: 'Inventario en tiempo real',  desc: 'Control total del stock con alertas automáticas de productos bajo mínimo.' },
   { icon: TrendingUp,   title: 'Trazabilidad completa',      desc: 'Historial de cada movimiento: quién, qué cantidad y cuándo.' },
-  { icon: ShoppingCart, title: 'Gestión de compras',         desc: 'Registra pedidos, facturas y proveedores en un solo flujo.' },
+  { icon: ShoppingCart, title: 'Gestión de compras',         desc: 'Registra pedidos, productos y proveedores en un solo flujo.' },
   { icon: Scissors,     title: 'Registro de servicios',      desc: 'Vincula los productos consumidos a cada servicio realizado.' },
 ];
 

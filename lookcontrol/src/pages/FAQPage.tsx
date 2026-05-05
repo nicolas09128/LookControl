@@ -12,11 +12,7 @@ const FAQS = [
   },
   {
     question: '¿Puedo empezar gratis?',
-    answer: 'Sí. El plan gratuito permite probar el flujo principal con inventario, compras, proveedores y dashboard básico.',
-  },
-  {
-    question: '¿Qué plan necesito si somos varios usuarios?',
-    answer: 'Depende del número de personas que vayan a usar la aplicación y de los módulos que necesite el salón. Puedes escribirnos desde contacto y te orientamos.',
+    answer: 'Sí. El plan es gratuito permite usar el flujo principal con inventario, compras, proveedores y dashboard básico.',
   },
   {
     question: '¿El módulo de servicios está incluido en todos los planes?',
@@ -25,10 +21,6 @@ const FAQS = [
   {
     question: '¿Qué pasa si elimino un producto?',
     answer: 'LookControl prioriza la trazabilidad. Las acciones importantes piden confirmación y la información relevante se conserva cuando es necesario para el historial.',
-  },
-  {
-    question: '¿Puedo pagar una sola vez?',
-    answer: 'Sí. Puedes elegir entre pago mensual o pago único cuando el plan lo permita.',
   },
   {
     question: '¿Dónde puedo pedir ayuda?',
