@@ -45,8 +45,8 @@ function RoleGuard({ children, roles }: { children: React.ReactNode; roles: stri
 }
 
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-(--bg-base)">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="animate-spin text-(--brand-primary)">
+  <div className="page-loader">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="animate-spin page-loader-icon">
       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.2" />
       <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
     </svg>

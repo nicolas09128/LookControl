@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Scissors } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
-import { Alert, Btn, Field, Input } from '../components/ui/index';
+import { Alert, Btn, Field, Input, PasswordInput } from '../components/ui/index';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -82,10 +82,10 @@ export default function RegisterOwnerPage() {
               <Input type="text" placeholder="Peluquería Bella" value={form.nombrePeluqueria} onChange={set('nombrePeluqueria')} />
             </Field>
             <Field label="Contraseña">
-              <Input type="password" placeholder="Mín. 6 caracteres" value={form.password} onChange={set('password')} />
+              <PasswordInput placeholder="Mín. 6 caracteres" value={form.password} onChange={set('password')} />
             </Field>
             <Field label="Confirmar contraseña">
-              <Input type="password" placeholder="Repite la contraseña" value={form.confirm} onChange={set('confirm')} />
+              <PasswordInput placeholder="Repite la contraseña" value={form.confirm} onChange={set('confirm')} />
             </Field>
             <Btn type="submit" loading={loading}>Crear cuenta de dueño</Btn>
           </form>

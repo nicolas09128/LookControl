@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Scissors } from 'lucide-react';
 import { supabase } from '../database/supabase/Client';
 import { useAuthStore } from '../store/authStore';
-import { Alert, Btn, Field, Input } from '../components/ui/index';
+import { Alert, Btn, Field, Input, PasswordInput } from '../components/ui/index';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
               <Input type="text" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} autoFocus />
             </Field>
             <Field label="Contraseña">
-              <Input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
+              <PasswordInput placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} />
             </Field>
             <div className="login-forgot-link">
               <Link to="/reset-password">¿Olvidaste tu contraseña?</Link>
