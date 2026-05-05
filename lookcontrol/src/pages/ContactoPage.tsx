@@ -1,13 +1,45 @@
 import { FormEvent, useState } from 'react';
-import { CheckCircle2, Mail, MessageSquare, Send } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Mail, MessageSquare, Send } from 'lucide-react';
 
 export default function ContactoPage() {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSent(true);
-    event.currentTarget.reset();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setSent(false);
+    setError('');
+    setIsSending(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          reason: formData.get('reason'),
+          message: formData.get('message'),
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.error ?? 'No se pudo enviar el mensaje.');
+      }
+
+      setSent(true);
+      form.reset();
+    } catch (sendError) {
+      setError(sendError instanceof Error ? sendError.message : 'No se pudo enviar el mensaje.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -30,7 +62,14 @@ export default function ContactoPage() {
           {sent && (
             <div className="contact-success">
               <CheckCircle2 size={18} />
-              Mensaje preparado correctamente. Te responderemos lo antes posible.
+              Mensaje enviado correctamente. Te responderemos lo antes posible.
+            </div>
+          )}
+
+          {error && (
+            <div className="contact-error">
+              <AlertCircle size={18} />
+              {error}
             </div>
           )}
 
@@ -45,9 +84,7 @@ export default function ContactoPage() {
             </label>
             <label>
               Motivo
-              <select name="reason" defaultValue="demo">
-                <option value="demo">Quiero una demo</option>
-                <option value="plan">Dudas sobre planes</option>
+              <select name="reason" defaultValue="support">
                 <option value="support">Soporte</option>
                 <option value="other">Otro</option>
               </select>
@@ -56,9 +93,9 @@ export default function ContactoPage() {
               Mensaje
               <textarea name="message" rows={5} placeholder="Cuéntanos brevemente qué necesitas..." required />
             </label>
-            <button type="submit">
+            <button type="submit" disabled={isSending}>
               <Send size={16} />
-              Enviar mensaje
+              {isSending ? 'Enviando...' : 'Enviar mensaje'}
             </button>
           </form>
         </div>
