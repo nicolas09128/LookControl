@@ -48,6 +48,17 @@ export default function ResetPasswordPage() {
 
       if (hasRecoveryToken) {
         setMode('update');
+        return;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!mounted) return;
+
+      if (session?.user) {
+        setMode('update');
       }
     };
 
