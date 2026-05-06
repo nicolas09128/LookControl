@@ -7,7 +7,7 @@ type ResetMode = 'request' | 'verify';
 
 const getErrorMessage = (message: string) => {
   if (message.includes('SUPABASE_SERVICE_ROLE_KEY')) {
-    return 'Falta configurar la clave privada de Supabase en el servidor.';
+    return 'Falta configurar correctamente la clave service_role de Supabase en el servidor.';
   }
 
   return message;

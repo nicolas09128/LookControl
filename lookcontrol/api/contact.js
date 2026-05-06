@@ -83,6 +83,10 @@ export async function sendMail({ from, to, replyTo, subject, text }) {
   const pass = process.env.SMTP_PASS;
   const secure = String(process.env.SMTP_SECURE ?? 'true') !== 'false';
 
+  if (!user) {
+    throw new Error('Falta configurar SMTP_USER con el correo de autenticacion SMTP.');
+  }
+
   if (!pass) {
     throw new Error('Falta configurar SMTP_PASS con la contrasena de aplicacion de Gmail.');
   }

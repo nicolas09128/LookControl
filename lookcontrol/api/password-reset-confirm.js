@@ -1,12 +1,27 @@
 import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
+const getJwtRole = (token) => {
+  try {
+    const payload = token.split('.')[1];
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(Buffer.from(normalized, 'base64').toString('utf8'));
+    return decoded.role;
+  } catch {
+    return null;
+  }
+};
+
 const getSupabaseAdmin = () => {
   const url = process.env.VITE_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceRoleKey) {
     throw new Error('Falta configurar SUPABASE_SERVICE_ROLE_KEY en el servidor.');
+  }
+
+  if (getJwtRole(serviceRoleKey) !== 'service_role') {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY no es valida: has puesto la anon key en vez de la service_role key.');
   }
 
   return createClient(url, serviceRoleKey, {
@@ -83,7 +98,7 @@ export default async function handler(req, res) {
     const { data: perfil, error: perfilError } = await supabaseAdmin
       .from('perfiles')
       .select('user_id')
-      .eq('email', email)
+      .ilike('email', email)
       .maybeSingle();
 
     if (perfilError) {
