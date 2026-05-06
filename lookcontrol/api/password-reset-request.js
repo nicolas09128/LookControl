@@ -106,10 +106,33 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error:
-        error instanceof Error && error.message.includes('SUPABASE_SERVICE_ROLE_KEY')
-          ? error.message
-          : 'No se pudo enviar el codigo de recuperacion.',
+      error: getPublicErrorMessage(error),
     });
   }
+}
+
+function getPublicErrorMessage(error) {
+  const message = error instanceof Error ? error.message : '';
+
+  if (message.includes('SUPABASE_SERVICE_ROLE_KEY')) {
+    return message;
+  }
+
+  if (message.includes('password_reset_codes')) {
+    return 'No existe la tabla password_reset_codes en Supabase o no esta accesible.';
+  }
+
+  if (message.includes('SMTP_PASS') || message.includes('SMTP_USER')) {
+    return message;
+  }
+
+  if (message.includes('535-5.7.8') || message.includes('BadCredentials')) {
+    return 'Gmail no acepta SMTP_USER o SMTP_PASS. Revisa la contrasena de aplicacion.';
+  }
+
+  if (message.includes('SMTP error') || message.includes('SMTP connection')) {
+    return 'No se pudo enviar el email por SMTP. Revisa SMTP_HOST, SMTP_PORT, SMTP_USER y SMTP_PASS.';
+  }
+
+  return 'No se pudo enviar el codigo de recuperacion.';
 }

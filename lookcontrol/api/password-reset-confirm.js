@@ -126,10 +126,25 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error:
-        error instanceof Error && error.message.includes('SUPABASE_SERVICE_ROLE_KEY')
-          ? error.message
-          : 'No se pudo cambiar la contrasena.',
+      error: getPublicErrorMessage(error),
     });
   }
+}
+
+function getPublicErrorMessage(error) {
+  const message = error instanceof Error ? error.message : '';
+
+  if (message.includes('SUPABASE_SERVICE_ROLE_KEY')) {
+    return message;
+  }
+
+  if (message.includes('password_reset_codes')) {
+    return 'No existe la tabla password_reset_codes en Supabase o no esta accesible.';
+  }
+
+  if (message.includes('User not found')) {
+    return 'No existe una cuenta con ese email.';
+  }
+
+  return 'No se pudo cambiar la contrasena.';
 }
