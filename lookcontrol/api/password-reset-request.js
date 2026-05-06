@@ -69,7 +69,7 @@ async function sendRecoveryCodeEmail({ to, code }) {
 
     if (!resendResponse.ok) {
       const details = await resendResponse.text();
-      throw new Error(`RESEND_ERROR ${resendResponse.status}: ${details}`);
+      throw new Error(`RESEND_ERROR ${resendResponse.status}: ${details.slice(0, 500)}`);
     }
 
     return;
@@ -166,7 +166,7 @@ function getPublicErrorMessage(error) {
   }
 
   if (message.includes('RESEND_ERROR')) {
-    return 'No se pudo enviar el email con Resend. Revisa RESEND_API_KEY y RESEND_FROM_EMAIL.';
+    return message;
   }
 
   return 'No se pudo enviar el codigo de recuperacion.';
