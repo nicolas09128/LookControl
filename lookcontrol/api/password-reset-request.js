@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { sendMail } from './contact.js';
 
 const CONTACT_EMAIL = 'contactolookcontrol@gmail.com';
+const DEFAULT_RESEND_FROM = 'LookControl <onboarding@resend.dev>';
 
 const getJwtRole = (token) => {
   try {
@@ -39,6 +40,49 @@ const hashCode = (email, code) =>
     .digest('hex');
 
 const normalizeEmail = (email) => String(email ?? '').trim().toLowerCase();
+
+async function sendRecoveryCodeEmail({ to, code }) {
+  const subject = 'Codigo de recuperacion LookControl';
+  const text = [
+    'Has solicitado cambiar tu contrasena de LookControl.',
+    '',
+    `Tu codigo de recuperacion es: ${code}`,
+    '',
+    'Este codigo caduca en 15 minutos.',
+    'Si no has pedido este cambio, puedes ignorar este correo.',
+  ].join('\n');
+
+  if (process.env.RESEND_API_KEY) {
+    const resendResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM_EMAIL ?? DEFAULT_RESEND_FROM,
+        to,
+        subject,
+        text,
+      }),
+    });
+
+    if (!resendResponse.ok) {
+      const details = await resendResponse.text();
+      throw new Error(`RESEND_ERROR ${resendResponse.status}: ${details}`);
+    }
+
+    return;
+  }
+
+  await sendMail({
+    from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? CONTACT_EMAIL,
+    to,
+    replyTo: CONTACT_EMAIL,
+    subject,
+    text,
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -87,20 +131,7 @@ export default async function handler(req, res) {
       throw insertError;
     }
 
-    await sendMail({
-      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? CONTACT_EMAIL,
-      to: email,
-      replyTo: CONTACT_EMAIL,
-      subject: 'Codigo de recuperacion LookControl',
-      text: [
-        'Has solicitado cambiar tu contrasena de LookControl.',
-        '',
-        `Tu codigo de recuperacion es: ${code}`,
-        '',
-        'Este codigo caduca en 15 minutos.',
-        'Si no has pedido este cambio, puedes ignorar este correo.',
-      ].join('\n'),
-    });
+    await sendRecoveryCodeEmail({ to: email, code });
 
     return res.status(200).json({ ok: true });
   } catch (error) {
@@ -132,6 +163,10 @@ function getPublicErrorMessage(error) {
 
   if (message.includes('SMTP error') || message.includes('SMTP connection')) {
     return 'No se pudo enviar el email por SMTP. Revisa SMTP_HOST, SMTP_PORT, SMTP_USER y SMTP_PASS.';
+  }
+
+  if (message.includes('RESEND_ERROR')) {
+    return 'No se pudo enviar el email con Resend. Revisa RESEND_API_KEY y RESEND_FROM_EMAIL.';
   }
 
   return 'No se pudo enviar el codigo de recuperacion.';
