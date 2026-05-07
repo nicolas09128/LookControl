@@ -55,13 +55,12 @@ export default function OwnerCodePage() {
           <p className="register-subtitle">Introduce el código de la peluquería del dueño para acceder.</p>
           {error && <div><Alert type="error" message={error} /></div>}
           {success && <div><Alert type="success" message="Código aceptado. Redirigiendo..." /></div>}
-          <form className="register-form" onSubmit={handleSubmit}>
+          <form className="register-form" onSubmit={handleSubmit} noValidate>
             <Field label="Código del dueño">
               <Input
                 placeholder="AB3X9K2M"
                 value={code}
                 onChange={e => setCode(e.target.value.toUpperCase())}
-                required
                 autoFocus
               />
             </Field>

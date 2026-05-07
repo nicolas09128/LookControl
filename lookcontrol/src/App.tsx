@@ -23,6 +23,7 @@ const ServiciosPage   = lazy(() => import('./pages/ServiciosPage'));
 const ProfilePage     = lazy(() => import('./pages/ProfilePage'));
 const AdminPage       = lazy(() => import('./pages/AdminPage'));
 const OwnerCodePage   = lazy(() => import('./pages/OwnerCodePage'));
+const GraficosPage    = lazy(() => import('./pages/GraficosPage'));
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -86,6 +87,7 @@ export default function App() {
             <Route path="/profile"     element={<ProfilePage />} />
             <Route path="/owner-code"  element={<OwnerCodePage />} />
             <Route path="/admin"       element={<AdminGuard><AdminPage /></AdminGuard>} />
+            <Route path="/graficos"    element={<AdminGuard><GraficosPage /></AdminGuard>} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

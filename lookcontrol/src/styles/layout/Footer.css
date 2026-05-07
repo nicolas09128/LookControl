@@ -291,3 +291,50 @@ footer .copyright-text {
 .privacy-modal-content p {
   margin: 0;
 }
+
+html[data-theme='light'] .site-footer {
+  background: #ffffff;
+  border-top-color: #cbd5e1;
+  box-shadow: 0 -12px 30px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme='light'] .site-footer-brand-text,
+html[data-theme='light'] .privacy-modal-title {
+  color: #0f172a;
+}
+
+html[data-theme='light'] .site-footer-description,
+html[data-theme='light'] .site-footer-copy,
+html[data-theme='light'] .site-footer-status-text {
+  color: #64748b;
+}
+
+html[data-theme='light'] .site-footer-title,
+html[data-theme='light'] .site-footer-copy span {
+  color: #334155;
+}
+
+html[data-theme='light'] .site-footer-link,
+html[data-theme='light'] .site-footer-privacy-btn {
+  color: #475569;
+}
+
+html[data-theme='light'] .site-footer-bottom {
+  border-top-color: #cbd5e1;
+}
+
+html[data-theme='light'] .privacy-modal {
+  background: rgba(15, 23, 42, 0.42);
+}
+
+html[data-theme='light'] .privacy-modal-panel {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+}
+
+html[data-theme='light'] .privacy-modal-close {
+  border-color: #cbd5e1;
+  color: #475569;
+}

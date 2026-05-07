@@ -20,6 +20,7 @@ const appLinks = [
 
 export default function Footer() {
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showCookies, setShowCookies] = useState(false);
 
   return (
     <footer className="site-footer">
@@ -66,6 +67,9 @@ export default function Footer() {
             <button type="button" onClick={() => setShowPrivacy(true)} className="site-footer-privacy-btn">
               Politica de privacidad
             </button>
+            <button type="button" onClick={() => setShowCookies(true)} className="site-footer-privacy-btn">
+              Cookies
+            </button>
             <span className="site-footer-status-dot" />
             <span className="site-footer-status-text">Todos los sistemas operativos</span>
           </div>
@@ -73,6 +77,7 @@ export default function Footer() {
       </div>
 
       {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
+      {showCookies && <CookiesModal onClose={() => setShowCookies(false)} />}
     </footer>
   );
 }
@@ -92,7 +97,7 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
   );
 }
 
-function PrivacyModal({ onClose }: { onClose: () => void }) {
+export function PrivacyModal({ onClose }: { onClose: () => void }) {
   return (
     <div role="dialog" aria-modal="true" aria-labelledby="privacy-title" className="privacy-modal">
       <div onClick={onClose} className="privacy-modal-backdrop" />
@@ -117,6 +122,46 @@ function PrivacyModal({ onClose }: { onClose: () => void }) {
             legales cuando aplique.
           </p>
           <p>Recomendamos no introducir datos sensibles que no sean necesarios para la gestion diaria del salon.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CookiesModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby="cookies-title" className="privacy-modal">
+      <div onClick={onClose} className="privacy-modal-backdrop" />
+      <div className="privacy-modal-panel">
+        <button type="button" aria-label="Cerrar politica de cookies" onClick={onClose} className="privacy-modal-close">
+          <X size={16} />
+        </button>
+        <h2 id="cookies-title" className="privacy-modal-title">Cookies</h2>
+        <div className="privacy-modal-content">
+          <p>
+            Este sitio web puede utilizar cookies técnicas (pequeños archivos de información que el servidor envía al
+            ordenador de quien accede a la página) para llevar a cabo determinadas funciones que son consideradas
+            imprescindibles para el correcto funcionamiento y visualización del sitio. Las cookies utilizadas tienen, en
+            todo caso, carácter temporal, con la única finalidad de hacer más eficaz la navegación, y desaparecen al
+            terminar la sesión del usuario. En ningún caso, estas cookies proporcionan por sí mismas datos de carácter
+            personal y no se utilizarán para la recogida de los mismos.
+          </p>
+          <p>
+            Mediante el uso de cookies también es posible que el servidor donde se encuentra la web reconozca el
+            navegador utilizado por el usuario con la finalidad de que la navegación sea más sencilla, permitiendo, por
+            ejemplo, el acceso de los usuarios que se hayan registrado previamente a las áreas, servicios, promociones o
+            concursos reservados exclusivamente a ellos sin tener que registrarse en cada visita.
+          </p>
+          <p>
+            También se pueden utilizar para medir la audiencia, parámetros de tráfico, controlar el progreso y número de
+            entradas, etc., siendo en estos casos cookies prescindibles técnicamente, pero beneficiosas para el usuario.
+            Este sitio web no instalará cookies prescindibles sin el consentimiento previo del usuario.
+          </p>
+          <p>
+            El usuario tiene la posibilidad de configurar su navegador para ser alertado de la recepción de cookies y
+            para impedir su instalación en su equipo. Por favor, consulte las instrucciones de su navegador para ampliar
+            esta información.
+          </p>
         </div>
       </div>
     </div>

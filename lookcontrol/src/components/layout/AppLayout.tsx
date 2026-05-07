@@ -6,6 +6,7 @@ import {
   LogOut,
   Menu,
   Package,
+  BarChart3,
   Scissors,
   ShoppingCart,
   TrendingUp,
@@ -27,6 +28,7 @@ const navItems = [
   { to: '/proveedores', label: 'Proveedores', icon: Truck, roles: ['admin', 'user'] },
   { to: '/servicios', label: 'Servicios', icon: Scissors, roles: ['admin', 'user', 'empleado'] },
   { to: '/admin', label: 'Administrar', icon: Users, roles: ['admin'] },
+  { to: '/graficos', label: 'Gráficos', icon: BarChart3, roles: ['admin'] },
 ];
 
 export default function AppLayout() {

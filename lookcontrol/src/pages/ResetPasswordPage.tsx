@@ -13,6 +13,8 @@ const getErrorMessage = (message: string) => {
   return message;
 };
 
+const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [recoveryCode, setRecoveryCode] = useState('');
@@ -27,13 +29,25 @@ export default function ResetPasswordPage() {
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const emailValue = email.trim();
+
+    if (!emailValue) {
+      setError('Introduce tu email.');
+      return;
+    }
+
+    if (!isValidEmail(emailValue)) {
+      setError('Introduce un email valido.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const response = await fetch('/api/password-reset-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: emailValue }),
       });
       const payload = await response.json().catch(() => ({}));
 
@@ -53,6 +67,33 @@ export default function ResetPasswordPage() {
   const handleConfirmCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const emailValue = email.trim();
+    const codeValue = recoveryCode.trim();
+
+    if (!emailValue) {
+      setError('Introduce tu email.');
+      return;
+    }
+
+    if (!isValidEmail(emailValue)) {
+      setError('Introduce un email valido.');
+      return;
+    }
+
+    if (!codeValue) {
+      setError('Introduce el codigo de recuperacion.');
+      return;
+    }
+
+    if (!newPassword) {
+      setError('Introduce la nueva contrasena.');
+      return;
+    }
+
+    if (!confirmPassword) {
+      setError('Repite la nueva contrasena.');
+      return;
+    }
 
     if (newPassword.length < 8) {
       setError('La contrasena debe tener al menos 8 caracteres.');
@@ -71,8 +112,8 @@ export default function ResetPasswordPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email,
-          code: recoveryCode,
+          email: emailValue,
+          code: codeValue,
           password: newPassword,
         }),
       });
@@ -112,9 +153,9 @@ export default function ResetPasswordPage() {
           {updated && <Alert type="success" message="Contrasena actualizada. Ya puedes iniciar sesion con la nueva contrasena." />}
 
           {mode === 'request' && !updated && (
-            <form className="reset-form" onSubmit={handleRequestCode}>
+            <form className="reset-form" onSubmit={handleRequestCode} noValidate>
               <Field label="Email">
-                <Input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} required autoFocus />
+                <Input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} autoFocus />
               </Field>
               <Btn type="submit" loading={loading}>Enviar codigo</Btn>
             </form>
@@ -123,9 +164,9 @@ export default function ResetPasswordPage() {
           {mode === 'verify' && !updated && (
             <>
               {sent && <Alert type="success" message="Codigo enviado. Revisa tu email." />}
-              <form className="reset-form" onSubmit={handleConfirmCode}>
+              <form className="reset-form" onSubmit={handleConfirmCode} noValidate>
                 <Field label="Email">
-                  <Input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                  <Input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
                 </Field>
                 <Field label="Codigo de recuperacion">
                   <Input
@@ -133,7 +174,6 @@ export default function ResetPasswordPage() {
                     placeholder="6 digitos"
                     value={recoveryCode}
                     onChange={e => setRecoveryCode(e.target.value)}
-                    required
                     autoFocus
                   />
                 </Field>
@@ -142,8 +182,6 @@ export default function ResetPasswordPage() {
                     placeholder="Nueva contrasena"
                     value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
-                    required
-                    minLength={8}
                   />
                 </Field>
                 <Field label="Repetir contrasena">
@@ -151,8 +189,6 @@ export default function ResetPasswordPage() {
                     placeholder="Repetir contrasena"
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
-                    required
-                    minLength={8}
                   />
                 </Field>
                 <Btn type="submit" loading={loading}>Cambiar contrasena</Btn>

@@ -70,6 +70,16 @@ export default function ProfilePage() {
   const handlePwd = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!newPassword) {
+      setAlertPwd({ type: 'error', msg: 'Introduce la nueva contrasena.' });
+      return;
+    }
+
+    if (!confirmPassword) {
+      setAlertPwd({ type: 'error', msg: 'Repite la nueva contrasena.' });
+      return;
+    }
+
     if (newPassword.length < 8) {
       setAlertPwd({ type: 'error', msg: 'La contraseña debe tener al menos 8 caracteres.' });
       return;
@@ -252,14 +262,12 @@ export default function ProfilePage() {
         <h2 className="profile-password-title">Contraseña</h2>
         <p className="profile-password-description">Cambia tu contraseña directamente desde tu cuenta.</p>
         {alertPwd && <div><Alert type={alertPwd.type} message={alertPwd.msg} /></div>}
-        <form className="profile-password-form" onSubmit={handlePwd}>
+        <form className="profile-password-form" onSubmit={handlePwd} noValidate>
           <Field label="Nueva contraseña">
             <PasswordInput
               placeholder="Nueva contraseña"
               value={newPassword}
               onChange={e => setNewPassword(e.target.value)}
-              required
-              minLength={8}
             />
           </Field>
           <Field label="Repetir contraseña">
@@ -267,8 +275,6 @@ export default function ProfilePage() {
               placeholder="Repetir contraseña"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
             />
           </Field>
           <Btn type="submit" loading={savingPwd}>Cambiar contraseña</Btn>

@@ -1,18 +1,51 @@
 import { FormEvent, useState } from 'react';
 import { AlertCircle, CheckCircle2, Mail, MessageSquare, Send } from 'lucide-react';
+import { PrivacyModal } from '../components/layout/Footer';
 
 export default function ContactoPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const name = String(formData.get('name') ?? '').trim();
+    const email = String(formData.get('email') ?? '').trim();
+    const reason = String(formData.get('reason') ?? '').trim();
+    const message = String(formData.get('message') ?? '').trim();
+    const legalAccepted = formData.get('legalAccepted') === 'on';
 
     setSent(false);
     setError('');
+
+    if (!name) {
+      setError('Introduce tu nombre.');
+      return;
+    }
+
+    if (!email) {
+      setError('Introduce tu email.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Introduce un email valido.');
+      return;
+    }
+
+    if (!message) {
+      setError('Escribe un mensaje.');
+      return;
+    }
+
+    if (!legalAccepted) {
+      setError('Debes aceptar el Aviso Legal y la Politica de Privacidad.');
+      return;
+    }
+
     setIsSending(true);
 
     try {
@@ -20,10 +53,10 @@ export default function ContactoPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          reason: formData.get('reason'),
-          message: formData.get('message'),
+          name,
+          email,
+          reason,
+          message,
         }),
       });
 
@@ -73,14 +106,14 @@ export default function ContactoPage() {
             </div>
           )}
 
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form" onSubmit={handleSubmit} noValidate>
             <label>
               Nombre
-              <input name="name" type="text" placeholder="Tu nombre" required />
+              <input name="name" type="text" placeholder="Tu nombre" />
             </label>
             <label>
               Email
-              <input name="email" type="email" placeholder="tu@email.com" required />
+              <input name="email" type="email" placeholder="tu@email.com" />
             </label>
             <label>
               Motivo
@@ -91,9 +124,20 @@ export default function ContactoPage() {
             </label>
             <label>
               Mensaje
-              <textarea name="message" rows={5} placeholder="Cuéntanos brevemente qué necesitas..." required />
+              <textarea name="message" rows={5} placeholder="Cuéntanos brevemente qué necesitas..." />
             </label>
-            <button type="submit" disabled={isSending}>
+            <div className="contact-legal-check">
+              <input id="contact-legalAccepted" name="legalAccepted" type="checkbox" aria-label="Aceptar aviso legal y politica de privacidad" />
+              <span>He leído y acepto el </span>
+              <button type="button" className="contact-legal-link" onClick={() => setShowPrivacy(true)}>
+                Aviso Legal
+              </button>
+              <span> y la </span>
+              <button type="button" className="contact-legal-link" onClick={() => setShowPrivacy(true)}>
+                Política de Privacidad
+              </button>
+            </div>
+            <button type="submit" className="contact-submit-button" disabled={isSending}>
               <Send size={16} />
               {isSending ? 'Enviando...' : 'Enviar mensaje'}
             </button>
@@ -117,6 +161,8 @@ export default function ContactoPage() {
           </div>
         </aside>
       </section>
+
+      {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
     </div>
   );
 }
