@@ -241,44 +241,47 @@ Antes del despliegue es necesario:
 
 ### 🗓️ Septiembre: Conceptualización e Identidad
 
-| Fecha      | Hito           | Descripción                                          |
-| :--------- | :------------- | :--------------------------------------------------- |
-| **12-SEP** | 🚀 Lanzamiento | Presentación inicial del proyecto y objetivos.       |
-| **19-SEP** | 💎 Branding    | Diseño de identidad visual y concepto de plataforma. |
-| **26-SEP** | ⚖️ Legal       | Formalización y documentación inicial.               |
+| Fecha      | Hito              | Descripción                                                            |
+| :--------- | :---------------- | :--------------------------------------------------------------------- |
+| **12-SEP** | 🚀 Presentación    | Presentación de asignatura y proyecto.                                 |
+| **19-SEP** | 💎 Imagen          | Creación de imagen corporativa de la empresa.                          |
+| **26-SEP** | ⚖️ Contrato        | Elaboración de contrato de prestación de servicios y recogida de necesidades. |
 
 ---
 
 ### 🏗️ Octubre: Arquitectura y Diseño
 
-| Fecha      | Hito             | Descripción                                           |
-| :--------- | :--------------- | :---------------------------------------------------- |
-| **03-OCT** | 📝 Requisitos    | Definición de historias de usuario y funcionalidades. |
-| **10-OCT** | 🎨 UI/UX         | Diseño de interfaces y experiencia de usuario.        |
-| **17-OCT** | 💾 Base de Datos | Diseño lógico y estructura relacional.                |
-| **24-OCT** | 🕸️ Modelado     | Relaciones, normalización y migraciones.              |
-| **31-OCT** | 🤝 Revisión      | Presentación de avances funcionales.                  |
+| Fecha      | Hito             | Descripción                                                       |
+| :--------- | :--------------- | :---------------------------------------------------------------- |
+| **03-OCT** | 📝 Requisitos    | Definición de requisitos funcionales y no funcionales, y presentación. |
+| **10-OCT** | 🎨 Interfaces    | Desarrollo de las interfaces gráficas.                            |
+| **17-OCT** | 💾 Base de Datos | Desarrollo de la estructura de la base de datos.                  |
+| **24-OCT** | 🕸️ Modelo        | Definición de modelo relacional de la base de datos.              |
+| **31-OCT** | 🤝 Presentación  | Presentación de interfaces y base de datos a la empresa.          |
 
 ---
 
 ### ⚙️ Noviembre: Desarrollo Core
 
-| Fecha      | Hito          | Descripción                                 |
-| :--------- | :------------ | :------------------------------------------ |
-| **07-NOV** | 🛠️ Stack     | Integración React + Supabase + Vite.        |
-| **14-NOV** | 🔐 Auth       | Sistema de autenticación y recuperación.    |
-| **21-NOV** | 📦 Inventario | Desarrollo del módulo de productos y stock. |
+| Fecha      | Hito             | Descripción                                                |
+| :--------- | :--------------- | :--------------------------------------------------------- |
+| **07-NOV** | 🛠️ Tecnologías   | Elección de tecnologías a utilizar.                        |
+| **14-NOV** | 🔐 Documentación  | Estructuración inicial de documentación.                   |
+| **21-NOV** | 📦 Manuales       | Definición de puntos de los manuales de usuario y técnico. |
 
 ---
 
 ### 🚀 Diciembre & Enero: Implementación y Deployment
 
-| Fecha      | Hito             | Descripción                                |
-| :--------- | :--------------- | :----------------------------------------- |
-| **05-DIC** | 📘 Documentación | Manual técnico y documentación funcional.  |
-| **12-DIC** | 📊 Analytics     | Implementación de gráficos y estadísticas. |
-| **19-DIC** | 🤖 Chatbot       | Integración del asistente inteligente.     |
-| **09-ENE** | ☁️ Producción    | Despliegue final en Vercel.                |
+| Fecha      | Hito             | Descripción                                                         |
+| :--------- | :--------------- | :------------------------------------------------------------------ |
+| **05-DIC** | 📘 Manuales       | Desarrollo inicial de manuales de usuario y técnico.                |
+| **12-DIC** | 📊 Despliegue     | Opciones de despliegue de aplicativos.                              |
+| **19-DIC** | 🤖 Local          | Pruebas de despliegue en entorno local.                             |
+| **09-ENE** | ☁️ Vercel         | Pruebas de despliegue en Vercel.                                    |
+| **16-ENE** | 🔧 Ajustes        | Fase de ajustes finales, corrección de errores (bugs) y optimización de rendimiento. |
+| **23-ENE** | 📚 Cierre         | Cierre definitivo de la documentación y manuales finales.           |
+| **30-ENE** | 🎓 Defensa        | Empaquetado final del software y preparación de la defensa del proyecto. |
 
 ---
 
