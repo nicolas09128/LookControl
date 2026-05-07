@@ -14,6 +14,11 @@
     background-color: #1E293B !important; 
     border-bottom: 1px solid #334155;
   }
+
+  html[data-theme='light'] .site-header {
+    background-color: rgba(255, 255, 255, 0.94) !important;
+    border-bottom-color: #CBD5E1;
+  }
 }
 @media (max-width: 700px) {
   .header-nav, 
@@ -275,4 +280,15 @@ html[data-theme='light'] .mobile-divider {
 @keyframes headerSlideDown {
   from { opacity: 0; transform: translateY(-100%); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767px) {
+  html[data-theme='light'] .site-header .logo-text,
+  html[data-theme='light'] .site-header .header-mobile-toggle {
+    color: #0F172A;
+  }
+
+  html[data-theme='light'] .site-header .logo-icon svg {
+    color: #38BDF8;
+  }
 }
