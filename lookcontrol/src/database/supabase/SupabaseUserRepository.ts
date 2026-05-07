@@ -9,14 +9,13 @@ import {
   type DefaultAvatarPath,
 } from './avatarStorage';
 
-// Mapa de mensajes de error de Supabase Auth → español
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
-  'User already registered':           'El email ya está registrado.',
-  'Email not confirmed':               'Debes confirmar tu email antes de iniciar sesión.',
-  'Invalid login credentials':         'Email o contraseña incorrectos.',
+  'User already registered': 'El email ya está registrado.',
+  'Email not confirmed': 'Debes confirmar tu email antes de iniciar sesión.',
+  'Invalid login credentials': 'Email o contraseña incorrectos.',
   'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres.',
-  'Email rate limit exceeded':         'Demasiados intentos. Inténtalo más tarde.',
-  'Signup requires a valid password':  'La contraseña no es válida.',
+  'Email rate limit exceeded': 'Demasiados intentos. Inténtalo más tarde.',
+  'Signup requires a valid password': 'La contraseña no es válida.',
 };
 
 function parseAuthError(message: string): string {
@@ -94,11 +93,6 @@ export class SupabaseUserRepository implements UserRepository {
     return { data: avatarUrl };
   }
 
-  /**
-   * isEmailTaken NO se usa en el flujo de registro.
-   * Un usuario anónimo no tiene policy SELECT sobre perfiles (RLS),
-   * así que este método solo es válido para llamadas autenticadas (admin).
-   */
   async isEmailTaken(email: string): Promise<boolean> {
     const { data } = await supabase
       .from('perfiles').select('id_perfil').eq('email', email).maybeSingle();
@@ -107,7 +101,7 @@ export class SupabaseUserRepository implements UserRepository {
 
   async register(input: RegisterData): Promise<{ error?: any }> {
     const { error } = await supabase.auth.signUp({
-      email:    input.email,
+      email: input.email,
       password: input.password,
       options: {
         data: {

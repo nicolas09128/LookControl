@@ -4,11 +4,6 @@ import { Scissors } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { Alert, Btn, Field, Input } from '../components/ui/index';
 
-/**
- * Ruta de fallback /owner-code para empleados que lleguen directamente a la URL.
- * El flujo principal pasa por el modal en AppLayout.
- * Esta página mantiene la misma lógica pero llama a linkEmployeePeluqueria del store.
- */
 export default function OwnerCodePage() {
   const navigate = useNavigate();
   const { perfil, linkEmployeePeluqueria } = useAuthStore();
@@ -19,7 +14,6 @@ export default function OwnerCodePage() {
 
   useEffect(() => {
     if (!perfil) return;
-    // Si ya tiene peluquería o no es empleado → dashboard
     if (perfil.rol !== 'empleado' || perfil.id_peluqueria) {
       navigate('/dashboard');
     }

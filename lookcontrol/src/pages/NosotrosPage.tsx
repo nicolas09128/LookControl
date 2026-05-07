@@ -117,7 +117,6 @@ export default function NosotrosPage() {
   return (
     <div style={s.page}>
 
-      {/* ── HERO ── */}
       <section style={s.hero}>
         <div style={s.badge}><Scissors size={13} /> Software para peluquerías</div>
         <h1 style={s.h1}>Nacimos en una <span style={s.accent}>peluquería</span></h1>
@@ -137,7 +136,6 @@ export default function NosotrosPage() {
 
       <div style={s.divider} />
 
-      {/* ── QUÉ OFRECEMOS ── */}
       <section style={s.section}>
         <p style={s.sectionLabel}>Qué ofrecemos</p>
         <h2 style={s.sectionTitle}>Todo lo que necesita tu peluquería</h2>
@@ -160,7 +158,6 @@ export default function NosotrosPage() {
 
       <div style={s.divider} />
 
-      {/* ── POR QUÉ ELEGIRNOS ── */}
       <section style={s.section}>
         <p style={s.sectionLabel}>Por qué elegirnos</p>
         <h2 style={s.sectionTitle}>Diseñado para tu día a día</h2>
@@ -187,7 +184,6 @@ export default function NosotrosPage() {
 
       <div style={s.divider} />
 
-      {/* ── QUÉ NOS HACE DIFERENTES ── */}
       <section style={s.section}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
           <div>
@@ -209,7 +205,6 @@ export default function NosotrosPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
       <section style={s.cta}>
         <h2 style={{ ...s.h1, fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', marginBottom: '16px' }}>
           ¿Listo para probarlo?

@@ -187,7 +187,6 @@ export default function ComprasPage() {
             </div>
             <Field label="Notas"><Textarea value={cabecera.notas} onChange={e => setCabecera(c => ({ ...c, notas: e.target.value }))} rows={2} /></Field>
 
-            {/* Líneas */}
             <div>
               <div className="compra-lineas-header">
                 <p className="compra-lineas-title">Líneas de compra</p>

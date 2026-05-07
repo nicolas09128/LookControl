@@ -1,4 +1,3 @@
-// src/interfaces/Perfil.ts
 export interface Perfil {
   id_perfil: number;
   user_id: string;

@@ -1,4 +1,3 @@
-// src/database/repositories/StockRepository.ts
 import type { MovimientoStock, MovimientoInput } from '../../interfaces/Stock';
 
 export interface StockRepository {

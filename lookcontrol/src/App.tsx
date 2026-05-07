@@ -4,26 +4,26 @@ import { useAuthStore } from './store/authStore';
 import AppLayout from './components/layout/AppLayout';
 import PublicLayout from './components/layout/PublicLayout';
 
-import LandingPage       from './pages/LandingPage';
-import LoginPage         from './pages/LoginPage';
-import RegisterPage      from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import RegisterOwnerPage from './pages/RegisterOwnerPage';
 import RegisterEmployeePage from './pages/RegisterEmployeePage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import NosotrosPage      from './pages/NosotrosPage';
-import ContactoPage      from './pages/ContactoPage';
-import FAQPage           from './pages/FAQPage';
+import NosotrosPage from './pages/NosotrosPage';
+import ContactoPage from './pages/ContactoPage';
+import FAQPage from './pages/FAQPage';
 
-const DashboardPage   = lazy(() => import('./pages/DashboardPage'));
-const ProductosPage   = lazy(() => import('./pages/ProductosPage'));
-const ComprasPage     = lazy(() => import('./pages/ComprasPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const ProductosPage = lazy(() => import('./pages/ProductosPage'));
+const ComprasPage = lazy(() => import('./pages/ComprasPage'));
 const ProveedoresPage = lazy(() => import('./pages/ProveedoresPage'));
-const StockPage       = lazy(() => import('./pages/StockPage'));
-const ServiciosPage   = lazy(() => import('./pages/ServiciosPage'));
-const ProfilePage     = lazy(() => import('./pages/ProfilePage'));
-const AdminPage       = lazy(() => import('./pages/AdminPage'));
-const OwnerCodePage   = lazy(() => import('./pages/OwnerCodePage'));
-const GraficosPage    = lazy(() => import('./pages/GraficosPage'));
+const StockPage = lazy(() => import('./pages/StockPage'));
+const ServiciosPage = lazy(() => import('./pages/ServiciosPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const OwnerCodePage = lazy(() => import('./pages/OwnerCodePage'));
+const GraficosPage = lazy(() => import('./pages/GraficosPage'));
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -63,31 +63,29 @@ export default function App() {
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Rutas publicas: comparten Header + Footer via PublicLayout */}
           <Route element={<PublicLayout />}>
-            <Route path="/"               element={<LandingPage />} />
-            <Route path="/login"          element={<PublicRoute><LoginPage /></PublicRoute>} />
-            <Route path="/register"       element={<PublicRoute><RegisterPage /></PublicRoute>} />
-            <Route path="/register/owner"    element={<PublicRoute><RegisterOwnerPage /></PublicRoute>} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+            <Route path="/register/owner" element={<PublicRoute><RegisterOwnerPage /></PublicRoute>} />
             <Route path="/register/employee" element={<PublicRoute><RegisterEmployeePage /></PublicRoute>} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/nosotros"       element={<NosotrosPage />} />
-            <Route path="/contacto"       element={<ContactoPage />} />
-            <Route path="/faq"            element={<FAQPage />} />
+            <Route path="/nosotros" element={<NosotrosPage />} />
+            <Route path="/contacto" element={<ContactoPage />} />
+            <Route path="/faq" element={<FAQPage />} />
           </Route>
 
-          {/* Rutas privadas: sidebar AppLayout */}
           <Route element={<PrivateLayout />}>
-            <Route path="/dashboard"   element={<DashboardPage />} />
-            <Route path="/productos"   element={<ProductosPage />} />
-            <Route path="/compras"     element={<ComprasPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/productos" element={<ProductosPage />} />
+            <Route path="/compras" element={<ComprasPage />} />
             <Route path="/proveedores" element={<RoleGuard roles={['admin', 'user']}><ProveedoresPage /></RoleGuard>} />
-            <Route path="/stock"       element={<StockPage />} />
-            <Route path="/servicios"   element={<ServiciosPage />} />
-            <Route path="/profile"     element={<ProfilePage />} />
-            <Route path="/owner-code"  element={<OwnerCodePage />} />
-            <Route path="/admin"       element={<AdminGuard><AdminPage /></AdminGuard>} />
-            <Route path="/graficos"    element={<AdminGuard><GraficosPage /></AdminGuard>} />
+            <Route path="/stock" element={<StockPage />} />
+            <Route path="/servicios" element={<ServiciosPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/owner-code" element={<OwnerCodePage />} />
+            <Route path="/admin" element={<AdminGuard><AdminPage /></AdminGuard>} />
+            <Route path="/graficos" element={<AdminGuard><GraficosPage /></AdminGuard>} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

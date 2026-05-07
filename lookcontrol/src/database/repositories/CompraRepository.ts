@@ -3,7 +3,6 @@ import type { Compra, CompraInput, DetalleCompraInput } from '../../interfaces/C
 export interface CompraRepository {
   getAll(): Promise<{ data?: Compra[]; error?: any }>;
   getById(id: number): Promise<{ data?: Compra; error?: any }>;
-  /** Crea la cabecera + líneas en una transacción lógica */
   create(
     cabecera: CompraInput,
     detalles: DetalleCompraInput[]

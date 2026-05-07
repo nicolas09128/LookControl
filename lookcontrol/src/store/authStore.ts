@@ -5,13 +5,9 @@ import { supabase } from '../database/supabase/Client';
 import { createUserRepository } from '../database/repositories';
 import { getAvatarDisplayUrl, type DefaultAvatarPath } from '../database/supabase/avatarStorage';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 function generateInviteCode(): string {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
-
-// ─── State interface ──────────────────────────────────────────────────────────
 
 interface AuthState {
   perfil: Perfil | null;
@@ -30,8 +26,6 @@ interface AuthState {
   setupOwnerPeluqueria: () => Promise<{ error?: string }>;
   linkEmployeePeluqueria: (code: string) => Promise<{ error?: string }>;
 }
-
-// ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -94,7 +88,6 @@ export const useAuthStore = create<AuthState>()(
 
         set({ perfil: perfilFinal, isAuthenticated: true, loading: false });
 
-        // Auto-setup para dueños sin peluquería enlazada
         if (perfilFinal.rol === 'admin' && !perfilFinal.id_peluqueria) {
           await get().setupOwnerPeluqueria();
         }
@@ -111,12 +104,11 @@ export const useAuthStore = create<AuthState>()(
         const { perfil } = get();
         if (!perfil) return { error: 'No hay sesión activa' };
         if (perfil.rol !== 'admin') return { error: 'Solo los dueños pueden usar esta acción' };
-        if (perfil.id_peluqueria) return {}; // Idempotente
+        if (perfil.id_peluqueria) return {};
 
         const nombrePeluqueria = perfil.nombre_peluqueria?.trim();
         if (!nombrePeluqueria) return { error: 'El perfil no tiene nombre de peluquería guardado' };
 
-        // Generar código único (reintento si colisiona)
         let codigoInvitacion = generateInviteCode();
         const { data: existing } = await supabase
           .from('peluquerias')

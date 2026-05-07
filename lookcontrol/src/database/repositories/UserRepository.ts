@@ -1,4 +1,3 @@
-// src/database/repositories/UserRepository.ts
 import type { Perfil, RegisterData } from '../../interfaces/Perfil';
 import type { DefaultAvatarPath } from '../supabase/avatarStorage';
 

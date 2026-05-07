@@ -1,4 +1,3 @@
-// src/database/repositories/ProveedorRepository.ts
 import type { Proveedor, ProveedorInput } from '../../interfaces/Proveedor';
 
 export interface ProveedorRepository {

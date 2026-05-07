@@ -22,22 +22,22 @@ const normalizeCategoryName = (name: string) =>
 export default function ProductosPage() {
   const { perfil } = useAuthStore();
   const isAdmin = perfil?.rol === 'admin';
-  const [productos, setProductos]   = useState<Producto[]>([]);
+  const [productos, setProductos] = useState<Producto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
-  const [loading, setLoading]       = useState(true);
-  const [search, setSearch]         = useState('');
-  const [filterCat, setFilterCat]   = useState('');
-  const [showModal, setShowModal]   = useState(false);
-  const [editing, setEditing]       = useState<Producto | null>(null);
-  const [form, setForm]             = useState<ProductoInput>(BLANK);
-  const [saving, setSaving]         = useState(false);
-  const [alertMsg, setAlertMsg]     = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [filterCat, setFilterCat] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<Producto | null>(null);
+  const [form, setForm] = useState<ProductoInput>(BLANK);
+  const [saving, setSaving] = useState(false);
+  const [alertMsg, setAlertMsg] = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Producto | null>(null);
 
   const prodRepo = useMemo(() => createProductoRepository(), []);
-  const catRepo  = useMemo(() => createCategoriaRepository(), []);
-  const pvRepo   = useMemo(() => createProveedorRepository(), []);
+  const catRepo = useMemo(() => createCategoriaRepository(), []);
+  const pvRepo = useMemo(() => createProveedorRepository(), []);
 
   const load = async () => {
     setLoading(true);
@@ -51,7 +51,7 @@ export default function ProductosPage() {
 
   const filtered = useMemo(() => productos.filter(p => {
     const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase());
-    const matchCat    = !filterCat || String(p.id_categoria) === filterCat;
+    const matchCat = !filterCat || String(p.id_categoria) === filterCat;
     return matchSearch && matchCat;
   }), [productos, search, filterCat]);
   const productCategoryOptions = useMemo(() => (
@@ -64,7 +64,7 @@ export default function ProductosPage() {
   ), [categorias]);
 
   const openCreate = () => { setEditing(null); setForm({ ...BLANK, id_peluqueria: perfil?.id_peluqueria || 0 }); setAlertMsg(null); setShowModal(true); };
-  const openEdit   = (p: Producto) => {
+  const openEdit = (p: Producto) => {
     setEditing(p);
     setForm({ id_categoria: p.id_categoria, id_proveedor: p.id_proveedor, nombre: p.nombre, descripcion: p.descripcion, precio_coste: p.precio_coste, precio_venta: p.precio_venta, stock_actual: p.stock_actual, stock_minimo: p.stock_minimo, unidad: p.unidad, activo: p.activo, id_peluqueria: p.id_peluqueria });
     setAlertMsg(null);
@@ -121,7 +121,6 @@ export default function ProductosPage() {
         subtitle="Catálogo de productos de la peluquería"
         action={isAdmin && <Btn onClick={openCreate}><Plus size={16} />Nuevo producto</Btn>}
       />
-      {/* Filters */}
       <div className="productos-filters">
         <div className="productos-search">
           <Search size={15} className="productos-search-icon" />

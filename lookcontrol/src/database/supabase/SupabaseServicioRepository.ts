@@ -1,4 +1,3 @@
-// src/database/supabase/SupabaseServicioRepository.ts
 import type { Servicio, ServicioInput, ConsumoServicio, ConsumoInput } from '../../interfaces/Stock';
 import type { ServicioRepository } from '../repositories/ServicioRepository';
 import { supabase } from './Client';
@@ -9,9 +8,14 @@ const SELECT_CONSUMO = `
   producto:productos ( nombre, unidad )
 `;
 
-export class SupabaseServicioRepository implements ServicioRepository {
+function limpiarServicioPayload(input: Partial<ServicioInput>, quitarPeluqueria = false) {
+  const dbPayload = { ...input };
+  delete dbPayload.duracion_min;
+  if (quitarPeluqueria) delete dbPayload.id_peluqueria;
+  return dbPayload;
+}
 
-  // ── servicios ─────────────────────────────────────────
+export class SupabaseServicioRepository implements ServicioRepository {
 
   async getAll(): Promise<{ data?: Servicio[]; error?: any }> {
     const { data, error } = await supabase
@@ -34,7 +38,7 @@ export class SupabaseServicioRepository implements ServicioRepository {
   }
 
   async create(input: ServicioInput): Promise<{ data?: Servicio; error?: any }> {
-    const { duracion_min, ...dbPayload } = input; // duracion_min no existe en la tabla
+    const dbPayload = limpiarServicioPayload(input);
     const { data, error } = await supabase
       .from('servicios')
       .insert(dbPayload)
@@ -45,7 +49,7 @@ export class SupabaseServicioRepository implements ServicioRepository {
   }
 
   async update(id: number, input: Partial<ServicioInput>): Promise<{ data?: Servicio; error?: any }> {
-    const { duracion_min, id_peluqueria, ...dbPayload } = input; // duracion_min no existe en DB; id_peluqueria no se muta
+    const dbPayload = limpiarServicioPayload(input, true);
     const { data, error } = await supabase
       .from('servicios')
       .update(dbPayload)
@@ -63,10 +67,6 @@ export class SupabaseServicioRepository implements ServicioRepository {
       .eq('id_servicio', id);
     return { error: error ?? null };
   }
-
-  // ── consumos_servicio ─────────────────────────────────
-  // El trigger handle_consumo_servicio en Supabase genera automáticamente
-  // el movimiento de salida en movimientos_stock al insertar aquí.
 
   async getConsumos(idServicio: number): Promise<{ data?: ConsumoServicio[]; error?: any }> {
     const { data, error } = await supabase

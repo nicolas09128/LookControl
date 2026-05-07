@@ -14,7 +14,6 @@ export interface Compra {
   notas: string | null;
   estado: EstadoCompra;
   fecha_creacion: string;
-  // joins
   proveedor?: Pick<Proveedor, 'nombre'>;
   detalle_compras?: DetalleCompra[];
 }
@@ -27,7 +26,6 @@ export interface DetalleCompra {
   precio_unitario: number;
   fecha_caducidad: string | null;
   lote: string | null;
-  // join
   producto?: Pick<Producto, 'nombre' | 'unidad'>;
 }
 

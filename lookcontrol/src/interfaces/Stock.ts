@@ -1,7 +1,6 @@
 import type { Producto } from './Producto';
 import type { Perfil } from './Perfil';
 
-// ─── MOVIMIENTO DE STOCK ──────────────────────────────────
 export type TipoMovimiento = 'entrada' | 'salida' | 'ajuste';
 
 export interface MovimientoStock {
@@ -14,26 +13,23 @@ export interface MovimientoStock {
   motivo: string | null;
   referencia_id: number | null;
   fecha: string;
-  // joins
   producto?: Pick<Producto, 'nombre' | 'unidad'>;
   perfil?: Pick<Perfil, 'nombre_completo' | 'email'>;
 }
 
 export type MovimientoInput = Omit<MovimientoStock, 'id_movimiento' | 'fecha' | 'producto' | 'perfil' | 'referencia_id'>;
 
-// ─── SERVICIO ─────────────────────────────────────────────
 export interface Servicio {
-  id_servicio:   number;
+  id_servicio: number;
   id_peluqueria: number;
-  nombre:        string;
-  precio:        number | null;
-  duracion_min:  number | null;
-  activo:        boolean;
+  nombre: string;
+  precio: number | null;
+  duracion_min: number | null;
+  activo: boolean;
 }
 
 export type ServicioInput = Omit<Servicio, 'id_servicio'>;
 
-// ─── CONSUMO DE SERVICIO ──────────────────────────────────
 export interface ConsumoServicio {
   id_consumo: number;
   id_servicio: number;
@@ -42,7 +38,6 @@ export interface ConsumoServicio {
   cantidad_usada: number;
   fecha: string;
   notas: string | null;
-  // joins
   servicio?: Pick<Servicio, 'nombre'>;
   producto?: Pick<Producto, 'nombre' | 'unidad'>;
 }

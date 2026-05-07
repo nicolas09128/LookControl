@@ -8,9 +8,9 @@ import { PageHeader, Badge, Spinner, EmptyState, Modal } from '../components/ui/
 export default function AdminPage() {
   const perfil = useAuthStore(state => state.perfil);
 
-  const [usuarios, setUsuarios]           = useState<Perfil[]>([]);
-  const [loading, setLoading]             = useState(true);
-  const [deleting, setDeleting]           = useState<string | null>(null);
+  const [usuarios, setUsuarios] = useState<Perfil[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [confirmUserId, setConfirmUserId] = useState<string | null>(null);
 
   const loadUsuarios = async () => {
@@ -18,14 +18,12 @@ export default function AdminPage() {
 
     setLoading(true);
 
-    // Solo perfiles de ESTA peluquería — nunca de otras
     const { data } = await supabase
       .from('perfiles')
       .select('*')
       .eq('id_peluqueria', perfil.id_peluqueria)
       .order('fecha_registro', { ascending: false });
 
-    // Excluir otros admins: solo mostrar al propio admin + sus empleados
     const filtrado = (data ?? []).filter(
       u => u.user_id === perfil.user_id || u.rol !== 'admin'
     );
@@ -37,7 +35,7 @@ export default function AdminPage() {
   useEffect(() => { loadUsuarios(); }, [perfil?.id_peluqueria]);
 
   const confirmDelete = (userId: string) => setConfirmUserId(userId);
-  const cancelDelete  = () => setConfirmUserId(null);
+  const cancelDelete = () => setConfirmUserId(null);
 
   const handleDelete = async () => {
     if (!confirmUserId) return;
@@ -53,16 +51,15 @@ export default function AdminPage() {
   const empleados = usuarios.filter(u => u.user_id !== perfil?.user_id);
 
   const stats = {
-    total:    usuarios.length,
+    total: usuarios.length,
     empleados: empleados.length,
-    activos:  empleados.filter(u => u.rol === 'empleado').length,
+    activos: empleados.filter(u => u.rol === 'empleado').length,
   };
 
   return (
     <div>
       <PageHeader title="Administración" subtitle="Gestión de empleados de tu peluquería" />
 
-      {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat-card">
           <div className="admin-stat-icon"><Users size={20} /></div>
@@ -81,7 +78,6 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Tabla usuarios */}
       <div className="admin-users-card">
         <h2 className="admin-users-title"><Users size={16} />Gestión de usuarios</h2>
 
@@ -102,9 +98,8 @@ export default function AdminPage() {
               <tbody>
                 {usuarios.map(u => {
                   const esMiCuenta = u.user_id === perfil?.user_id;
-                  const isDeleting  = deleting === u.user_id;
-                  // No se puede eliminar la propia cuenta ni otros admins
-                  const canDelete   = !esMiCuenta && u.rol !== 'admin';
+                  const isDeleting = deleting === u.user_id;
+                  const canDelete = !esMiCuenta && u.rol !== 'admin';
 
                   return (
                     <tr key={u.user_id}>
@@ -165,7 +160,6 @@ export default function AdminPage() {
         )}
       </div>
 
-      {/* Modal de confirmación */}
       {confirmUserId && usuarioAEliminar && (
         <Modal title="Eliminar empleado" onClose={cancelDelete} size="sm">
           <p style={{ marginBottom: '1rem', color: 'var(--text-secondary, #9ca3af)', lineHeight: 1.5 }}>

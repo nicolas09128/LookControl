@@ -9,10 +9,10 @@ import { StatCard, Badge, PageHeader, Spinner } from '../components/ui/index';
 
 export default function DashboardPage() {
   const { perfil } = useAuthStore();
-  const [productos, setProductos]           = useState<Producto[]>([]);
-  const [compras, setCompras]               = useState<Compra[]>([]);
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [compras, setCompras] = useState<Compra[]>([]);
   const [totalProveedores, setTotalProveedores] = useState(0);
-  const [loading, setLoading]               = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -28,10 +28,10 @@ export default function DashboardPage() {
   const bajoStock = productos.filter(p => p.stock_actual <= p.stock_minimo);
   const isEmployee = perfil?.rol === 'empleado';
   const quickLinks = [
-    { to: '/productos',   icon: Package,      label: 'Añadir producto' },
-    { to: '/compras',     icon: ShoppingCart, label: 'Nueva compra'    },
-    { to: '/proveedores', icon: Truck,         label: 'Proveedores'    },
-    { to: '/stock',       icon: Package,      label: 'Ver movimientos' },
+    { to: '/productos', icon: Package, label: 'Añadir producto' },
+    { to: '/compras', icon: ShoppingCart, label: 'Nueva compra' },
+    { to: '/proveedores', icon: Truck, label: 'Proveedores' },
+    { to: '/stock', icon: Package, label: 'Ver movimientos' },
   ].filter(item => !isEmployee || item.to !== '/proveedores');
 
   if (loading) return <div><Spinner size={32} /></div>;
@@ -43,7 +43,6 @@ export default function DashboardPage() {
         subtitle="Resumen del día"
       />
 
-      {/* Stats */}
       <div className="dashboard-stats">
         <StatCard label="Total productos"    value={productos.length}  color="primary" />
         <StatCard label="Bajo stock"         value={bajoStock.length}  color={bajoStock.length > 0 ? 'danger' : 'success'} sub={bajoStock.length > 0 ? 'Requieren atención' : 'Todo en orden'} />
@@ -52,7 +51,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="dashboard-grid">
-        {/* Bajo stock */}
         <div className="dashboard-section">
           <div className="dashboard-section-header">
             <div className="dashboard-section-title">
@@ -81,7 +79,6 @@ export default function DashboardPage() {
           }
         </div>
 
-        {/* Últimas compras */}
         <div className="dashboard-section">
           <div className="dashboard-section-header">
             <div className="dashboard-section-title">
@@ -111,7 +108,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick links */}
       <div className="dashboard-quick-links">
         {quickLinks.map(({ to, icon: Icon, label }) => (
           <Link key={to} to={to} className="dashboard-quick-link">

@@ -31,8 +31,6 @@ export class SupabaseProductoRepository implements ProductoRepository {
   }
 
   async getBajoStock(): Promise<{ data?: Producto[]; error?: any }> {
-
-    // Fallback: filtramos en cliente si la RPC no está disponible aún
     const { data: all, error: allErr } = await supabase
       .from('productos')
       .select(SELECT_PRODUCTO)
@@ -73,7 +71,6 @@ export class SupabaseProductoRepository implements ProductoRepository {
   }
 
   async delete(id: number): Promise<{ error?: any }> {
-    // Soft delete: marcamos como inactivo
     const { error } = await supabase
       .from('productos')
       .update({ activo: false })

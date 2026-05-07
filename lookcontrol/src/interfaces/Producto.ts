@@ -14,12 +14,10 @@ export interface Producto {
   unidad: UnidadMedida;
   activo: boolean;
   fecha_alta: string;
-  // joins opcionales
   categoria?: { nombre: string };
   proveedor?: { nombre: string };
 }
 
 export type ProductoInput = Omit<Producto, 'id_producto' | 'fecha_alta' | 'categoria' | 'proveedor'>;
 
-/** Producto con stock bajo: stock_actual <= stock_minimo */
 export type ProductoBajoStock = Producto & { dias_sin_reposicion?: number };
