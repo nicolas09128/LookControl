@@ -32,13 +32,10 @@ La plataforma está diseñada para que los profesionales puedan **centrarse en s
 ## 👥 Roles y Permisos
 
 ### 👑 Admin
-Acceso completo al sistema: gestión de productos, stock, compras, proveedores, servicios, empleados, gráficos analíticos y administración general de la peluquería.
+Acceso completo al sistema: gestión de productos, stock, compras, proveedores, servicios, empleados, gráficos analíticos y administración general de la peluquería. Es el propietario del salón y genera el código de invitación para los empleados.
 
-### ✂️ Usuario
-Acceso operativo para gestión diaria: productos, movimientos de stock, compras, proveedores y servicios.
-
-### 👨‍💼 Empleado
-Acceso limitado al sistema mediante vinculación con código de invitación proporcionado por una peluquería registrada.
+### ✂️ Empleado
+Acceso operativo para la gestión diaria. Puede consultar productos, compras, proveedores y servicios, y registrar movimientos de stock. Se vincula al salón mediante un código de invitación proporcionado por el admin.
 
 ---
 
@@ -200,7 +197,9 @@ GROQ_API_KEY=
 
 ## ☁️ Despliegue
 
-El proyecto está preparado para despliegue en **Vercel**.
+El proyecto está preparado para despliegue en **Vercel**. La aplicación está disponible en producción en:
+
+> 🔗 **[https://lookcontrol.vercel.app](https://lookcontrol.vercel.app)**
 
 Archivos de configuración:
 
@@ -210,8 +209,7 @@ Archivos de configuración:
 Antes del despliegue es necesario:
 
 * Configurar las variables de entorno en Vercel.
-* Verificar el esquema actualizado de Supabase.
-* Ejecutar correctamente las migraciones de base de datos.
+* Aplicar el esquema de base de datos desde el panel de Supabase.
 
 ---
 
@@ -297,6 +295,3 @@ Antes del despliegue es necesario:
 ---
 
 *LookControl — Tu aliado para una peluquería más eficiente y moderna.*
-
-```
-```
