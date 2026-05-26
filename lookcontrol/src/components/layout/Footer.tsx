@@ -117,7 +117,7 @@ export function PrivacyModal({ onClose }: { onClose: () => void }) {
             mantenerla.
           </p>
           <p>
-            Puedes solicitar la revision, correccion o eliminacion de tus datos escribiendo a contacto@lookcontrol.app.
+            Puedes solicitar la revision, correccion o eliminacion de tus datos escribiendo a contactolookcontrol@gmail.com.
             Conservaremos la informacion necesaria para mantener la trazabilidad del negocio y cumplir obligaciones
             legales cuando aplique.
           </p>
